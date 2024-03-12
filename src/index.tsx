@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server'
 import { Button, Frog, TextInput} from 'frog'
+import { app as startSwirl } from './startSwirl'
 
 
 import fetch from 'node-fetch';
@@ -95,7 +96,6 @@ app.frame('/', async (c) => {
 
 app.frame('/creator', async (c) => {
   const { frameData, deriveState } = c  
-  console.log("orange")
   const state = await deriveState(async (previousState) => {
     if (frameData?.fid && !previousState.creatorName) {
         previousState.creatorId = frameData?.fid; 
@@ -233,10 +233,12 @@ app.frame('/emulsifier', async (c) => {
       </div>
     ),
     intents: [
-      <Button value="start">Start Swirl</Button>
+      <Button action="/startSwirl" value="start">Start Swirl</Button>
     ],
   })
 })
+
+app.route("/startSwirl", startSwirl)
 
 const port = 3000
 console.log(`Server is running on port ${port}`)

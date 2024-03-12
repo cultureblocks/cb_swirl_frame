@@ -73,7 +73,6 @@ app.frame('/', async (c) => {
 });
 app.frame('/creator', async (c) => {
     const { frameData, deriveState } = c;
-    console.log("orange");
     const state = await deriveState(async (previousState) => {
         if (frameData?.fid && !previousState.creatorName) {
             previousState.creatorId = frameData?.fid;
