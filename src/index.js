@@ -1,6 +1,7 @@
 import { jsx as _jsx } from "hono/jsx/jsx-runtime";
 import { serve } from '@hono/node-server';
 import { Button, Frog, TextInput } from 'frog';
+import { app as startSwirl } from './startSwirl';
 import fetch from 'node-fetch';
 // Function to fetch transfer details and extract the username
 const getFname = async (fid) => {
@@ -177,10 +178,11 @@ app.frame('/emulsifier', async (c) => {
                     whiteSpace: 'pre-wrap',
                 }, children: dynamicText }) })),
         intents: [
-            _jsx(Button, { value: "start", children: "Start Swirl" })
+            _jsx(Button, { action: "/startSwirl", value: "start", children: "Start Swirl" })
         ],
     });
 });
+app.route("/startSwirl", startSwirl);
 const port = 3000;
 console.log(`Server is running on port ${port}`);
 serve({
