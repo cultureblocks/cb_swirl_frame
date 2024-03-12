@@ -1,9 +1,58 @@
 import { serve } from '@hono/node-server'
 import { Button, Frog, TextInput} from 'frog'
-import { app as startSwirl } from './startSwirl'
-
-
 import fetch from 'node-fetch';
+import fs from 'fs';
+
+// // Define the type for the data object
+// interface SwirlData {
+//   castId: string;
+//   creatorId: number;
+//   creatorName: string;
+//   headline: string;
+//   emulsifier: string;
+//   current_turn: number;
+//   turns: number;
+//   // responses: [{
+//   //     name: string;
+//   //     message: string
+//   // }];
+//   // synthesis: string;
+//   // mintLink: string
+// }
+
+// // Function to write data to a JSON file
+// function saveSwirl(filename: string, data: SwirlData): void {
+//     fs.writeFile(filename, JSON.stringify(data, null, 2), (err) => {
+//         if (err) {
+//             console.error('Error writing to JSON file:', err);
+//         } else {
+//             console.log('Data written to JSON file successfully.');
+//         }
+//     });
+// }
+
+// // Function to read data from a JSON file
+// function loadSwirl(filename: string): SwirlData | null {
+//     try {
+//         const data: string = fs.readFileSync(filename, 'utf8');
+//         return JSON.parse(data) as SwirlData;
+//     } catch (err) {
+//         console.error('Error reading from JSON file:', err);
+//         return null;
+//     }
+// }
+
+// // Example usage
+// const filename: string = 'swirlData.json';
+
+// // Write data to the JSON file
+// const dataToWrite: SwirlData = { name: 'John', age: 30, city: 'New York' };
+// saveSwirl(filename, dataToWrite);
+
+// // Read data from the JSON file
+// const dataRead: SwirlData | null = loadSwirl(filename);
+// console.log('Data read from JSON file:', dataRead);
+
 
 type TransferData = {
     transfers?: [
@@ -44,16 +93,25 @@ export const app = new Frog({
   basePath: '/swirl',
   browserLocation: 'http://cultureblocks.world',
   initialState: {
+    castId: "",
     creatorId: 0,
     creatorName: "",
     headline: "",
     emulsifier: "",
-    turns: 6
+    current_turn: 0,
+    turns: 6,
+    responses: [{
+      name: "",
+      message: ""
+    }],
+    synthesis: "",
+    mintLink: ""
   },
   // verify: false
   // Supply a Hub API URL to enable frame verification.
   // hubApiUrl: 'https://api.hub.wevm.dev',
 })
+
 
 app.frame('/', async (c) => {
   return c.res({
@@ -98,6 +156,7 @@ app.frame('/creator', async (c) => {
   const { frameData, deriveState } = c  
   const state = await deriveState(async (previousState) => {
     if (frameData?.fid && !previousState.creatorName) {
+        previousState.castId = frameData?.castId.hash;
         previousState.creatorId = frameData?.fid; 
         previousState.creatorName = await getFname(previousState.creatorId);
   }
@@ -238,7 +297,67 @@ app.frame('/emulsifier', async (c) => {
   })
 })
 
-app.route("/startSwirl", startSwirl)
+
+app.frame('/startSwirl', async (c) => {
+  const { buttonValue, inputText, deriveState } = c  
+  const state = await deriveState(async (previousState) => {
+    // const dataToWrite: SwirlData = { 
+    //   castId: previousState.castId, 
+    //   creatorId: previousState.creatorId, 
+    //   creatorName: previousState.creatorName,
+    //   headline: previousState.headline,
+    //   emulsifier: previousState.emulsifier,
+    //   current_turn: 0,
+    //   turns: 6,
+    //   // responses:[
+    //   //   {
+    //   //     name:previousState.creatorName,
+    //   //     message:
+    //   //   }
+    //   // ] 
+    //   };
+    // saveSwirl(filename, dataToWrite);
+  });
+  
+  const dynamicText = `Everything look good?\n\nSwirl Creator: ${state.creatorName} \nHeadline: ${state.headline}\nEmulsifier: ${state.emulsifier}`
+  return c.res({
+    image: (
+      <div
+        style={{
+          alignItems: 'center',
+          background: `url('https://i.ibb.co/xhNRrSL/swirl-frame-compressed-compressed-compressed.jpg')`, //TODO create url and pull image from /images
+          backgroundSize: '100% 100%',
+          display: 'flex',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+          height: '100%',
+          justifyContent: 'center',
+          textAlign: 'center',
+          width: '100%',
+        }}
+      >
+        <div
+          style={{
+            color: 'black',
+            fontSize: 60,
+            fontStyle: 'normal',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.4,
+            marginTop: 30,
+            padding: '0 120px',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {dynamicText}
+        </div>
+      </div>
+    ),
+    intents: [
+      <Button action="/startSwirl" value="start">Start Swirl</Button>
+    ],
+  })
+})
+
 
 const port = 3000
 console.log(`Server is running on port ${port}`)
