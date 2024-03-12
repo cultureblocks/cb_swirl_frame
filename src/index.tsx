@@ -47,7 +47,7 @@ export const app = new Frog({
     creatorName: "",
     headline: "",
     emulsifier: "",
-    turns: 12
+    turns: 6
   },
   // verify: false
   // Supply a Hub API URL to enable frame verification.
@@ -195,7 +195,7 @@ app.frame('/emulsifier', async (c) => {
   const { buttonValue, inputText, deriveState } = c  
   const state = await deriveState(async (previousState) => {
     if (buttonValue === 'emulsifier' && inputText) {
-      nextState.emulsifier = inputText; 
+      previousState.emulsifier = inputText; 
   }
   });
   

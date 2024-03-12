@@ -37,7 +37,7 @@ export const app = new Frog({
         creatorName: "",
         headline: "",
         emulsifier: "",
-        turns: 12
+        turns: 6
     },
     // verify: false
     // Supply a Hub API URL to enable frame verification.
@@ -75,22 +75,12 @@ app.frame('/creator', async (c) => {
     const { frameData, deriveState } = c;
     console.log("orange");
     const state = await deriveState(async (previousState) => {
-        let nextState = { ...previousState };
-        console.log(frameData);
-        console.log(frameData?.fid);
         if (frameData?.fid && !previousState.creatorName) {
-            nextState.creatorId = frameData?.fid;
-            nextState.creatorName = await getFname(nextState.creatorId);
+            previousState.creatorId = frameData?.fid;
+            previousState.creatorName = await getFname(previousState.creatorId);
         }
-        console.log("next state");
-        console.log(nextState);
-        return nextState;
     });
-    console.log(state);
-    console.log(state.creatorName);
-    console.log("california");
     const dynamicText = `Swirl Creator: ${state.creatorName} \n\n A headline is the seed and source of inspiration for the conversation. (Eg. "Strange experiences", "Food is delicious", "What are you building?").`;
-    console.log("burritos");
     return c.res({
         image: (_jsx("div", { style: {
                 alignItems: 'center',
@@ -123,11 +113,9 @@ app.frame('/creator', async (c) => {
 app.frame('/headline', async (c) => {
     const { buttonValue, inputText, deriveState } = c;
     const state = await deriveState(async (previousState) => {
-        let nextState = { ...previousState };
         if (buttonValue === 'headline' && inputText) {
-            nextState.headline = inputText;
-        }
-        return nextState; //TODO create a Try again frame with go back/reset buttons
+            previousState.headline = inputText;
+        } //TODO create a try again frame with go back/reset buttons
     });
     const dynamicText = `Swirl Creator: ${state.creatorName} \nHeadline: ${state.headline}\n\n An emulsifier tells the AI how to synthesize the conversation. (Eg. "Write a short story/poem", "Create a novel recipe", "Form a proposal for a web3 project")`;
     return c.res({
@@ -162,11 +150,9 @@ app.frame('/headline', async (c) => {
 app.frame('/emulsifier', async (c) => {
     const { buttonValue, inputText, deriveState } = c;
     const state = await deriveState(async (previousState) => {
-        let nextState = { ...previousState };
         if (buttonValue === 'emulsifier' && inputText) {
-            nextState.emulsifier = inputText;
+            previousState.emulsifier = inputText;
         }
-        return nextState;
     });
     const dynamicText = `Everything look good?\n\nSwirl Creator: ${state.creatorName} \nHeadline: ${state.headline}\nEmulsifier: ${state.emulsifier}`;
     return c.res({
