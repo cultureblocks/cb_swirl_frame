@@ -4,14 +4,16 @@
   "type": "module",
   "scripts": {
     "dev": "frog dev",
-    "serve": "tsx src/index.tsx",
+    "serve": "tsx src/test.tsx",
     "build": "tsc"
   },
   "dependencies": {
     "@hono/node-server": "^1",
+    "dotenv": "^16.4.5",
     "frog": "^0.5.6",
     "hono": "^4.1.0",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "openai": "^4.29.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
