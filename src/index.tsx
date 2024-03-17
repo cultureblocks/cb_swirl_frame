@@ -333,9 +333,15 @@ app.frame('/', async (c) => {
   console.log("-----------frame at initial cast");
   
   const randomImageUrl = getRandomImage();
-  
   return c.res({
     image: randomImageUrl, 
+    imageOptions: {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      }
+    },
     intents: [
       <Button action="/swirl" value="loadSwirl">Swirl</Button>,
       <Button action="/block" value="create">Block</Button>,

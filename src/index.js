@@ -259,6 +259,13 @@ app.frame('/', async (c) => {
     const randomImageUrl = getRandomImage();
     return c.res({
         image: randomImageUrl,
+        imageOptions: {
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0',
+            }
+        },
         intents: [
             _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
             _jsx(Button, { action: "/block", value: "create", children: "Block" }),
