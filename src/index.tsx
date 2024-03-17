@@ -26,7 +26,7 @@ interface Swirl {
   castId: string | undefined;
   creatorId: number | undefined;
   inspiration: string | undefined;
-  modifier: string | undefined;
+  blender: string | undefined;
   currentTurn: number;
   turns: number;
   responses: { fid: number | undefined; response: string | undefined }[];
@@ -40,7 +40,7 @@ const emptySwirl: Swirl = {
   castId: "",
   creatorId: 0,
   inspiration: "",
-  modifier: "",
+  blender: "",
   currentTurn: 0,
   turns: 0,
   responses: [],
@@ -143,7 +143,7 @@ async function synthesize(swirl: Swirl, shortenMessage = "", counter = 0): Promi
       const completionBody: ChatCompletionCreateParamsNonStreaming = {
         model: "gpt-3.5-turbo",
         messages: [
-          { role: "system", content: `${contextPlusInspiration} ${swirl.modifier}` },
+          { role: "system", content: `${contextPlusInspiration} ${swirl.blender}` },
           { role: "user", content: chunk }
         ],
       };
@@ -240,7 +240,7 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 
   const fullText = `Inspiration: ${swirl.inspiration}\n` + 
                    swirl.responses.map(item => item.response).join('\n') + 
-                   `\nModifier: ${swirl.modifier}`;
+                   `\nBlender: ${swirl.blender}`;
 
   const responsesWithExtras = fullText.split('\n').map((line, index) => (
     <div key={index} style={{ color: shuffledColors[index % shuffledColors.length] }}>
@@ -261,18 +261,6 @@ export const app = new Frog({
   browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/20',
   headers: {
     'Cache-Control': 'max-age=0',
-  },
-  initialState: {
-    castId: "",
-    creatorId: 0,
-    inspiration: "",
-    modifier: "",
-    currentTurn: 0,
-    turns: 2,
-    responses: [] as { fid: number | undefined, response: string | undefined }[],
-    synthesis: "",
-    ratings: [] as { fid: number | undefined, rating: number | undefined }[],
-    mintLink: ""
   },
   hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
   verify: true,
@@ -351,14 +339,13 @@ app.frame('/', async (c) => {
 
 
 app.frame('/swirl', async (c) => {
-  const { buttonValue, frameData, deriveState, inputText} = c
+  const { buttonValue, frameData, inputText} = c
   let sanitizedText: string | undefined
   if (inputText !== undefined) {
       sanitizedText = sanitizeText(inputText);
   } else {
       sanitizedText = undefined;
   }
-  const state = await deriveState(async (previousState) => {});
   const swirl = findSwirlDataByCastId(frameData?.castId.hash)
   
   if (swirl.castId){ // Swirl exists
@@ -401,14 +388,13 @@ app.frame('/swirl', async (c) => {
 
       const newResponse = { fid: frameData?.fid, response: sanitizedText };
       
-      const index = state.responses.findIndex(response => response.fid === newResponse.fid);
+      const index = swirl.responses.findIndex(response => response.fid === newResponse.fid);
       if (index !== -1) {
-          state.responses[index] = newResponse;
+          swirl.responses[index] = newResponse;
       } else {
-          state.responses.push(newResponse);
+          swirl.responses.push(newResponse);
       }
       
-      swirl.responses = state.responses;
       swirl.currentTurn += 1;
       saveSwirl(swirl);
 
@@ -550,14 +536,15 @@ app.frame('/swirl', async (c) => {
             <Button action= "/swirl" value="inspiration">No</Button>,
           ],
         })
-      } else if (buttonValue === "inspiration"){ // Creator can modify X
-        console.log("--------creator can modify")
+      } else if (buttonValue === "inspiration"){ // Creator can blend X
+        console.log("--------creator can blend")
 
         if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
-          state.inspiration = sanitizedText;
+          swirl.inspiration = sanitizedText;
         } else {
-            state.inspiration = '';
+          swirl.inspiration = '';
         }
+        saveSwirl(swirl);
       
         const needsLineBreak = `An emulsifier gives AI directions on what to do with the comments.\n\n If left blank, who knows what could happen...`
         const emulsifier = needsLineBreak.split('\n').map((line, index) => (
@@ -587,20 +574,21 @@ app.frame('/swirl', async (c) => {
           imageOptions: { width: 600, height: 600 },
           intents: [
             <TextInput placeholder="..." />,
-            <Button action= "/swirl" value="modifier">Wow</Button>,
-            <Button action= "/swirl" value="modifier">No</Button>,
+            <Button action= "/swirl" value="blender">Wow</Button>,
+            <Button action= "/swirl" value="blender">No</Button>,
           ],
         })
-      } else if (buttonValue === "modifier"){ // Creator can confirm X
+      } else if (buttonValue === "blender"){ // Creator can confirm X
         console.log("--------creator can confirm")
         
         if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
-          state.modifier = sanitizedText;
+          swirl.blender = sanitizedText;
         } else {
-            state.modifier = '';
+          swirl.blender = '';
         }
+        saveSwirl(swirl);
 
-        const needsLineBreak = `Inspiration: ${state.inspiration}\nModifier: ${state.modifier}\n\nDoes this look good?`;
+        const needsLineBreak = `Inspiration: ${swirl.inspiration}\nBlender: ${swirl.blender}\n\nDoes this look good?`;
         const lookGood = needsLineBreak.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
@@ -637,8 +625,6 @@ app.frame('/swirl', async (c) => {
 
         swirl.castId = frameData?.castId.hash
         swirl.creatorId = frameData?.fid
-        swirl.inspiration = state.inspiration
-        swirl.modifier = state.modifier
         swirl.currentTurn +=1
         swirl.turns = 2
         saveSwirl(swirl)
@@ -710,8 +696,7 @@ app.frame('/swirl', async (c) => {
 
 
 app.frame('/block', async (c) => {
-  const { buttonValue, frameData, deriveState, inputText} = c
-  const state = await deriveState(async (previousState) => {});
+  const { buttonValue, frameData, inputText} = c
   const swirl = findSwirlDataByCastId(frameData?.castId.hash)
   if (swirl.castId){// swirl exists
     console.log("========= swirl exists")
@@ -827,7 +812,6 @@ app.frame('/block', async (c) => {
         console.log("========= save new rating");
         
         const rating: number = parseInt(buttonValue);
-        state.ratings.push({ fid: frameData?.fid, rating });
         swirl.ratings.push({ fid: frameData?.fid, rating });
         saveSwirl(swirl);
 
