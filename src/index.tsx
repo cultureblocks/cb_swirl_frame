@@ -258,7 +258,7 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 
 export const app = new Frog({
   basePath: '/swirl',
-  browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/20',
+  browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
   headers: {
     'Cache-Control': 'max-age=0',
   },
