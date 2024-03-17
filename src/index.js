@@ -251,7 +251,8 @@ const images = [
 ];
 function getRandomImage() {
     const randomIndex = Math.floor(Math.random() * images.length);
-    return images[randomIndex];
+    const cacheBuster = new Date().getTime(); // Current timestamp as cache buster
+    return `${images[randomIndex]}?cb=${cacheBuster}`;
 }
 app.frame('/', async (c) => {
     console.log("-----------frame at initial cast");
