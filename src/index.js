@@ -253,6 +253,7 @@ function getRandomImage() {
 }
 app.frame('/', async (c) => {
     console.log("-----------frame at initial cast");
+    console.log(c)
     const randomImageUrl = getRandomImage();
     console.log(randomImageUrl)
     return c.res({
@@ -274,6 +275,7 @@ app.frame('/swirl', async (c) => {
     const { buttonValue, frameData, inputText, deriveState } = c;
     const state = deriveState(previousState => { });
     console.log(state);
+    console.log(c)
     let sanitizedText;
     if (inputText !== undefined) {
         sanitizedText = sanitizeText(inputText);
