@@ -11,7 +11,7 @@ const openai = new OpenAI.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 //// Swirl data
-const swirlJson = 'src/swirlsData.json';
+const swirlJson = 'swirlsData.json';
 // Define an empty swirl object
 const emptySwirl = {
     castId: "",
@@ -195,7 +195,7 @@ export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
     headers: {
-        'Cache-Control': 'max-age=0',
+        'Cache-Control': 'max-age=1',
     },
     hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
     verify: true,
@@ -422,6 +422,8 @@ app.frame('/swirl', async (c) => {
                 else {
                     swirl.inspiration = '';
                 }
+                swirl.castId = frameData?.castId.hash;
+                swirl.creatorId = frameData?.fid;saveSwirl(swirl);
                 saveSwirl(swirl);
                 const needsLineBreak = `An emulsifier gives AI directions on what to do with the comments.\n\n If left blank, who knows what could happen...`;
                 const emulsifier = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
@@ -481,8 +483,6 @@ app.frame('/swirl', async (c) => {
             }
             else { // Save new swirl, serve, accept message -> "merge" X
                 console.log("--------save and serve creator");
-                swirl.castId = frameData?.castId.hash;
-                swirl.creatorId = frameData?.fid;
                 swirl.currentTurn += 1;
                 swirl.turns = 6;
                 saveSwirl(swirl);
