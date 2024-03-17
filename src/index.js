@@ -284,7 +284,9 @@ app.frame('/swirl', async (c) => {
     else {
         sanitizedText = undefined;
     }
+    console.log(frameData?.castId.hash);
     const swirl = findSwirlDataByCastId(frameData?.castId.hash);
+    console.log(swirl)
     if (swirl.castId) { // Swirl exists
         console.log("-------- swirl in json");
         if (swirl.synthesis) { // Synth exists, no more messages X
