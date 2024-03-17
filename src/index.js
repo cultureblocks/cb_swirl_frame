@@ -203,7 +203,7 @@ export const app = new Frog({
         inspiration: "",
         modifier: "",
         currentTurn: 0,
-        turns: 2,
+        turns: 6,
         responses: [],
         synthesis: "",
         ratings: [],
@@ -498,7 +498,7 @@ app.frame('/swirl', async (c) => {
                 swirl.inspiration = state.inspiration;
                 swirl.modifier = state.modifier;
                 swirl.currentTurn += 1;
-                swirl.turns = 2;
+                swirl.turns = 6;
                 saveSwirl(swirl);
                 const swirlContent = renderSwirlWithUniqueColors(swirl);
                 return c.res({
