@@ -361,7 +361,7 @@ app.frame('/swirl', async (c) => {
   } else {
       sanitizedText = undefined;
   }
-  console.log(frameData?.castId.hash);
+  console.log(frameData);
 
   const swirl = findSwirlDataByCastId(frameData?.castId.hash)
   console.log(swirl)
