@@ -274,7 +274,7 @@ export const app = new Frog({
 // Middleware
 
 app.use(async (c, next) => {
-  console.log(`Middleware [${c.req.method}] ${c.req.url}`)
+  console.log(`Middleware [${c.req.method}] ${c.req.url} ${c.req.parseBody}`)
   await next()
 })
 
