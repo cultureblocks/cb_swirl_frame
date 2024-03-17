@@ -16,7 +16,7 @@ const openai = new OpenAI.OpenAI({
 
 //// Swirl data
 
-const swirlJson: string = 'src/swirlsData.json';
+const swirlJson: string = 'swirlsData.json';
 
 interface SwirlsData {
   swirls: Swirl[];
@@ -126,7 +126,6 @@ async function synthesize(swirl: Swirl, shortenMessage = "", counter = 0): Promi
     return ""; 
   }
 
-  const model = "gpt-3.5-turbo";
   const context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.";
   const tokenBudget = 3000;
   const outputCharacterLimit = 1024;
@@ -260,9 +259,15 @@ export const app = new Frog({
   basePath: '/swirl',
   browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
   headers: {
-    'Cache-Control': 'max-age=0',
+    'Cache-Control': 'max-age=1',
   },
   hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
+  initialState: {
+    castId: 0,
+    creatorId: 0,
+    inspiration: "",
+    blender: ""
+  },
   verify: true,
   secret: process.env.FROG_SECRET
 });
@@ -339,7 +344,9 @@ app.frame('/', async (c) => {
 
 
 app.frame('/swirl', async (c) => {
-  const { buttonValue, frameData, inputText} = c
+  const { buttonValue, frameData, inputText, deriveState} = c
+  const state = deriveState(previousState => {})  
+  console.log(state)
   let sanitizedText: string | undefined
   if (inputText !== undefined) {
       sanitizedText = sanitizeText(inputText);
@@ -540,11 +547,10 @@ app.frame('/swirl', async (c) => {
         console.log("--------creator can blend")
 
         if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
-          swirl.inspiration = sanitizedText;
+          state.inspiration = sanitizedText;
         } else {
-          swirl.inspiration = '';
+          state.inspiration = '';
         }
-        saveSwirl(swirl);
       
         const needsLineBreak = `An emulsifier gives AI directions on what to do with the comments.\n\n If left blank, who knows what could happen...`
         const emulsifier = needsLineBreak.split('\n').map((line, index) => (
@@ -582,11 +588,10 @@ app.frame('/swirl', async (c) => {
         console.log("--------creator can confirm")
         
         if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
-          swirl.blender = sanitizedText;
+          state.blender = sanitizedText;
         } else {
-          swirl.blender = '';
+          state.blender = '';
         }
-        saveSwirl(swirl);
 
         const needsLineBreak = `Inspiration: ${swirl.inspiration}\nBlender: ${swirl.blender}\n\nDoes this look good?`;
         const lookGood = needsLineBreak.split('\n').map((line, index) => (
@@ -624,9 +629,11 @@ app.frame('/swirl', async (c) => {
         console.log("--------save and serve creator")
 
         swirl.castId = frameData?.castId.hash
-        swirl.creatorId = frameData?.fid
+        swirl.creatorId = frameData?.castId.fid
+        swirl.inspiration = state.inspiration
+        swirl.blender = state.blender
         swirl.currentTurn +=1
-        swirl.turns = 2
+        swirl.turns = 6
         saveSwirl(swirl)
 
         const swirlContent = renderSwirlWithUniqueColors(swirl);
