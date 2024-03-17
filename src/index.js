@@ -189,6 +189,7 @@ function renderSwirlWithUniqueColors(swirl) {
     const responsesWithExtras = fullText.split('\n').map((line, index) => (_jsx("div", { style: { color: shuffledColors[index % shuffledColors.length] }, children: line }, index)));
     return responsesWithExtras;
 }
+console.log('API Key:', process.env.NEYNAR_API_KEY ?? 'default_api_key');
 //// Frog
 export const app = new Frog({
     basePath: '/swirl',

@@ -252,7 +252,7 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 }
 
 
-
+console.log('API Key:', process.env.NEYNAR_API_KEY ?? 'default_api_key');
 //// Frog
 
 
