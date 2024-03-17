@@ -333,6 +333,7 @@ app.frame('/', async (c) => {
   console.log("-----------frame at initial cast");
   
   const randomImageUrl = getRandomImage();
+  console.log(randomImageUrl)
   return c.res({
     image: randomImageUrl, 
     // imageOptions: {
