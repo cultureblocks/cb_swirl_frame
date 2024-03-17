@@ -193,7 +193,7 @@ function renderSwirlWithUniqueColors(swirl) {
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
+    hub: neynar({ apiKey: 'NEYNAR-API-KEY' }),
     initialState: {
         castId: 0,
         creatorId: 0,
