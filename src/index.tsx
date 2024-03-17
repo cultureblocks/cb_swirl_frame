@@ -328,6 +328,7 @@ function getRandomImage() {
 
 app.frame('/', async (c) => {
   console.log("-----------frame at initial cast");
+  console.log(c)
   
   const randomImageUrl = getRandomImage();
   console.log(randomImageUrl)
@@ -359,6 +360,7 @@ app.frame('/swirl', async (c) => {
       sanitizedText = undefined;
   }
   console.log(frameData);
+  console.log(c)
 
   const swirl = findSwirlDataByCastId(frameData?.castId.hash)
   console.log(swirl)
