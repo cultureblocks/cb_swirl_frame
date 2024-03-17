@@ -201,7 +201,6 @@ export const app = new Frog({
         inspiration: "",
         blender: ""
     },
-    verify: true,
     secret: process.env.FROG_SECRET
 });
 // Middleware
