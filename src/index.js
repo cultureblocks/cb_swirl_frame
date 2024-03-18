@@ -11,7 +11,7 @@ const openai = new OpenAI.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 //// Swirl data
-const swirlJson = 'swirlsData.json';
+const swirlJson = 'src/swirlsData.json';
 // Define an empty swirl object
 const emptySwirl = {
     castId: "",
@@ -195,6 +195,7 @@ export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
     hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
     initialState: {
         castId: 0,
         creatorId: 0,
@@ -253,9 +254,9 @@ function getRandomImage() {
 }
 app.frame('/', async (c) => {
     console.log("-----------frame at initial cast");
-    console.log(c)
+    console.log(c);
     const randomImageUrl = getRandomImage();
-    console.log(randomImageUrl)
+    console.log(randomImageUrl);
     return c.res({
         image: randomImageUrl,
         // imageOptions: {
@@ -275,7 +276,6 @@ app.frame('/swirl', async (c) => {
     const { buttonValue, frameData, inputText, deriveState } = c;
     const state = deriveState(previousState => { });
     console.log(state);
-    console.log(c)
     let sanitizedText;
     if (inputText !== undefined) {
         sanitizedText = sanitizeText(inputText);
@@ -284,8 +284,9 @@ app.frame('/swirl', async (c) => {
         sanitizedText = undefined;
     }
     console.log(frameData);
+    console.log(c);
     const swirl = findSwirlDataByCastId(frameData?.castId.hash);
-    console.log(swirl)
+    console.log(swirl);
     if (swirl.castId) { // Swirl exists
         console.log("-------- swirl in json");
         if (swirl.synthesis) { // Synth exists, no more messages X

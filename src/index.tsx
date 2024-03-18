@@ -5,7 +5,6 @@ import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs';
 import { neynar } from 'frog/hubs'
-const sdk = require('@neynar/sdk');
 
 dotenv.config();
 
@@ -17,7 +16,7 @@ const openai = new OpenAI.OpenAI({
 
 //// Swirl data
 
-const swirlJson: string = 'swirlsData.json';
+const swirlJson: string = 'src/swirlsData.json';
 
 interface SwirlsData {
   swirls: Swirl[];
@@ -260,6 +259,7 @@ export const app = new Frog({
   basePath: '/swirl',
   browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
   initialState: {
     castId: 0,
     creatorId: 0,
