@@ -11,7 +11,7 @@ const openai = new OpenAI.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 //// Swirl data
-const swirlJson = 'src/swirlsData.json';
+const swirlJson = 'swirlsData.json';
 // Define an empty swirl object
 const emptySwirl = {
     castId: "",
@@ -206,7 +206,14 @@ export const app = new Frog({
 });
 // Middleware
 app.use(async (c, next) => {
-    console.log(`Middleware [${c.req.method}] ${c.req.url} ${c.req.parseBody}`);
+    console.log(`Middleware [${c.req.method}] ${c.req.url}`);
+    console.log(c.res.body);
+    console.log(`Middleware 2`);
+    console.log(c.res.blob);
+    console.log(`Middleware 3`);
+    console.log(c.res.headers);
+    console.log(`Middleware 4`);
+    console.log(c.res.status);
     await next();
 });
 // Intro Swirl Frame
@@ -255,6 +262,9 @@ function getRandomImage() {
 app.frame('/', async (c) => {
     console.log("-----------frame at initial cast");
     console.log(c);
+    const body = await c.req.parseBody();
+    console.log("---- body");
+    console.log(body);
     const randomImageUrl = getRandomImage();
     console.log(randomImageUrl);
     return c.res({
