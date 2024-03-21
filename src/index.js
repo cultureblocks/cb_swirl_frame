@@ -460,7 +460,7 @@ app.frame('/swirl', async (c) => {
                     ],
                 });
             }
-            else if (buttonValue === "emulsifier") { // Creator can confirm X
+            else if (buttonValue === "emulsifier") { // Creator can confirm 
                 console.log("--------creator can confirm");
                 if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
                     state.emulsifier = sanitizedText;
@@ -468,7 +468,7 @@ app.frame('/swirl', async (c) => {
                 else {
                     state.emulsifier = '';
                 }
-                const needsLineBreak = `Inspiration: ${swirl.inspiration}\nEmulsifier: ${swirl.emulsifier}\n\nDoes this look good?`;
+                const needsLineBreak = `Inspiration: ${state.inspiration}\nEmulsifier: ${state.emulsifier}\n\nDoes this look good?`;
                 const lookGood = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
                 return c.res({
                     image: (_jsx("div", { style: {

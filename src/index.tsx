@@ -599,7 +599,7 @@ app.frame('/swirl', async (c) => {
           state.emulsifier = '';
         }
 
-        const needsLineBreak = `Inspiration: ${swirl.inspiration}\nEmulsifier: ${swirl.emulsifier}\n\nDoes this look good?`;
+        const needsLineBreak = `Inspiration: ${state.inspiration}\nEmulsifier: ${state.emulsifier}\n\nDoes this look good?`;
         const lookGood = needsLineBreak.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
