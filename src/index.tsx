@@ -16,7 +16,7 @@ const openai = new OpenAI.OpenAI({
 
 //// Swirl data
 
-const swirlJson: string = 'swirlsData.json';
+const swirlJson: string = 'src/swirlsData.json';
 
 interface SwirlsData {
   swirls: Swirl[];
@@ -26,7 +26,7 @@ interface Swirl {
   castId: string | undefined;
   creatorId: number | undefined;
   inspiration: string | undefined;
-  blender: string | undefined;
+  emulsifier: string | undefined;
   currentTurn: number;
   turns: number;
   responses: { fid: number | undefined; response: string | undefined }[];
@@ -40,7 +40,7 @@ const emptySwirl: Swirl = {
   castId: "",
   creatorId: 0,
   inspiration: "",
-  blender: "",
+  emulsifier: "",
   currentTurn: 0,
   turns: 0,
   responses: [],
@@ -142,7 +142,7 @@ async function synthesize(swirl: Swirl, shortenMessage = "", counter = 0): Promi
       const completionBody: ChatCompletionCreateParamsNonStreaming = {
         model: "gpt-3.5-turbo",
         messages: [
-          { role: "system", content: `${contextPlusInspiration} ${swirl.blender}` },
+          { role: "system", content: `${contextPlusInspiration} ${swirl.emulsifier}` },
           { role: "user", content: chunk }
         ],
       };
@@ -171,8 +171,6 @@ async function synthesize(swirl: Swirl, shortenMessage = "", counter = 0): Promi
 function chunkAndCleanResponses(
   responses: { fid: number | undefined; response: string | undefined; }[], 
   maxChunkSize: number, 
-  // prefix: string = "", 
-  // suffix: string = ""
 ): string[] {
   const result: string[] = [];
   let currentChunk: string = "";
@@ -194,8 +192,6 @@ function chunkAndCleanResponses(
     result.push(currentChunk);
   }
 
-  console.log(`+_+_+_+_+_+__+_+_+_+_+_+_+__result = ${result}`);
-  console.log(`Chunked responses = ${result.join('')}`);
   return result
 }
 
@@ -239,7 +235,7 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 
   const fullText = `Inspiration: ${swirl.inspiration}\n` + 
                    swirl.responses.map(item => item.response).join('\n') + 
-                   `\nBlender: ${swirl.blender}`;
+                   `\nEmulsifier: ${swirl.emulsifier}`;
 
   const responsesWithExtras = fullText.split('\n').map((line, index) => (
     <div key={index} style={{ color: shuffledColors[index % shuffledColors.length] }}>
@@ -251,7 +247,6 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 }
 
 
-console.log('API Key:', process.env.NEYNAR_API_KEY ?? 'default_api_key');
 //// Frog
 
 
@@ -259,12 +254,11 @@ export const app = new Frog({
   basePath: '/swirl',
   browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
   initialState: {
     castId: 0,
     creatorId: 0,
     inspiration: "",
-    blender: ""
+    emulsifier: ""
   },  
   secret: process.env.FROG_SECRET
 })
@@ -277,14 +271,10 @@ export const app = new Frog({
 
 app.use(async (c, next) => {
   console.log(`Middleware [${c.req.method}] ${c.req.url}`)
-  console.log(c.res.body)
-  console.log(`Middleware 2`)
-  console.log(c.res.blob);
-  console.log(`Middleware 3`)
+  console.log(c.res)
   console.log(c.res.headers);
-  console.log(`Middleware 4`)
   console.log(c.res.status);
-  
+  console.log(`Middleware 2`)
   await next()
 })
 
@@ -333,18 +323,13 @@ const images = [
 
 function getRandomImage() {
   const randomIndex = Math.floor(Math.random() * images.length);
-  const cacheBuster = new Date().getTime(); // Current timestamp as cache buster
+  const now = new Date();
+  const cacheBuster = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()).getTime();
   return `${images[randomIndex]}?cb=${cacheBuster}`;
 }
 
 app.frame('/', async (c) => {
   console.log("-----------frame at initial cast");
-  console.log(c)
-  const body = await c.req.parseBody()
-  console.log("---- body")
-  console.log(body);
-  
-
   
   const randomImageUrl = getRandomImage();
   console.log(randomImageUrl)
@@ -359,7 +344,7 @@ app.frame('/', async (c) => {
     // },
     intents: [
       <Button action="/swirl" value="loadSwirl">Swirl</Button>,
-      <Button action="/block" value="create">Block</Button>,
+      <Button action="/block" value="loadBlock">Block</Button>,
     ],
   });
 });
@@ -368,23 +353,21 @@ app.frame('/', async (c) => {
 app.frame('/swirl', async (c) => {
   const { buttonValue, frameData, inputText, deriveState} = c
   const state = deriveState(previousState => {})  
-  console.log(state)
   let sanitizedText: string | undefined
   if (inputText !== undefined) {
-      sanitizedText = sanitizeText(inputText);
+    sanitizedText = sanitizeText(inputText);
   } else {
-      sanitizedText = undefined;
+    sanitizedText = undefined;
   }
-  console.log(frameData);
-  console.log(c)
-
   const swirl = findSwirlDataByCastId(frameData?.castId.hash)
+  console.log(c)
+  console.log(state)
   console.log(swirl)
-  
+
   if (swirl.castId){ // Swirl exists
     console.log("-------- swirl in json")
 
-    if (swirl.synthesis) { // Synth exists, no more messages X
+    if (swirl.synthesis) { // Synth exists, no more messages
       console.log("------- synthesis exists, no more messages")
 
       const swirlContent = renderSwirlWithUniqueColors(swirl);
@@ -411,13 +394,12 @@ app.frame('/swirl', async (c) => {
         ),
         imageOptions: { width: 600, height: 600 },
         intents: [
-          <Button action="/swirl" value="loadSwirl">Swirl</Button>, 
-          <Button action="/block" value="swirl">Block</Button>, 
+          <Button action="/swirl">Swirl</Button>, 
+          <Button action="/block">Block</Button>, 
         ],
       })
-    } else if (buttonValue === "merge") {// Save and serve, synth if last turn
+    } else if (buttonValue === "merge") {// Save response, show swirl, synthesize if all responses are in
       console.log("--------save and serve")
-
 
       const newResponse = { fid: frameData?.fid, response: sanitizedText };
       
@@ -461,8 +443,8 @@ app.frame('/swirl', async (c) => {
         ),
         imageOptions: { width: 600, height: 600 },
         intents: [
-          <Button action="/swirl" value="loadSwirl">Swirl</Button>, 
-          <Button action="/block" value="swirl">Block</Button>, 
+          <Button action="/swirl">Swirl</Button>, 
+          <Button action="/block">Block</Button>, 
         ],
       })
     } else if (!swirl.responses.some(response => response.fid === frameData?.fid)){//If fid not in responses, User can respond
@@ -496,7 +478,7 @@ app.frame('/swirl', async (c) => {
           <Button action="/swirl" value="merge">Merge</Button>, 
         ],
       })
-    } else {// One message per user X
+    } else {// One message per user 
       console.log("------- one message per user")
 
       const swirlContent = renderSwirlWithUniqueColors(swirl);
@@ -523,18 +505,19 @@ app.frame('/swirl', async (c) => {
         ),
         imageOptions: { width: 600, height: 600 },
         intents: [
-          <TextInput placeholder="One message per account..." />,
+          <TextInput placeholder="One message per person..." />,
           <Button action="/swirl" value="merge">Replace Your Message</Button>, 
-          <Button action="/block" value="swirl">Block</Button>, 
+          <Button action="/block">Block</Button>, 
         ],
       })
     } 
-  } else { // Swirl does not exist X
+  } else { // Swirl does not exist 
     console.log("-------- swirl not in json")
-    if (frameData?.fid === frameData?.castId.fid) {// Creator can create X
+
+    if (frameData?.fid === frameData?.castId.fid) {// Creator can create 
       console.log("--------creator can create")
       
-      if (buttonValue === "loadSwirl"){ // Creator can inspire X
+      if (buttonValue === "loadSwirl"){ // Creator can inspire 
         console.log("--------creator can inspire")
 
         const needsLineBreak = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`
@@ -569,8 +552,8 @@ app.frame('/swirl', async (c) => {
             <Button action= "/swirl" value="inspiration">No</Button>,
           ],
         })
-      } else if (buttonValue === "inspiration"){ // Creator can blend X
-        console.log("--------creator can blend")
+      } else if (buttonValue === "inspiration"){ // Creator can emulsify X
+        console.log("--------creator can emulsify")
 
         if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
           state.inspiration = sanitizedText;
@@ -606,20 +589,20 @@ app.frame('/swirl', async (c) => {
           imageOptions: { width: 600, height: 600 },
           intents: [
             <TextInput placeholder="..." />,
-            <Button action= "/swirl" value="blender">Wow</Button>,
-            <Button action= "/swirl" value="blender">No</Button>,
+            <Button action= "/swirl" value="emulsifier">Wow</Button>,
+            <Button action= "/swirl" value="emulsifier">No</Button>,
           ],
         })
-      } else if (buttonValue === "blender"){ // Creator can confirm X
+      } else if (buttonValue === "emulsifier"){ // Creator can confirm X
         console.log("--------creator can confirm")
         
         if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
-          state.blender = sanitizedText;
+          state.emulsifier = sanitizedText;
         } else {
-          state.blender = '';
+          state.emulsifier = '';
         }
 
-        const needsLineBreak = `Inspiration: ${swirl.inspiration}\nBlender: ${swirl.blender}\n\nDoes this look good?`;
+        const needsLineBreak = `Inspiration: ${swirl.inspiration}\nEmulsifier: ${swirl.emulsifier}\n\nDoes this look good?`;
         const lookGood = needsLineBreak.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
@@ -651,13 +634,13 @@ app.frame('/swirl', async (c) => {
             <Button action= "/swirl" value="loadSwirl">No</Button>,
           ],
         })
-      } else { // Save new swirl, serve, accept message -> "merge" X
+      } else { // Save new swirl, serve, accept message -> "merge" 
         console.log("--------save and serve creator")
 
         swirl.castId = frameData?.castId.hash
         swirl.creatorId = frameData?.castId.fid
         swirl.inspiration = state.inspiration
-        swirl.blender = state.blender
+        swirl.emulsifier = state.emulsifier
         swirl.currentTurn +=1
         swirl.turns = 6
         saveSwirl(swirl)
@@ -692,7 +675,7 @@ app.frame('/swirl', async (c) => {
         })
       }
     
-    } else {// Not creator, wait X
+    } else {// Not creator, wait 
       console.log("--------wait for creation")
     
       return c.res({
@@ -718,7 +701,7 @@ app.frame('/swirl', async (c) => {
         imageOptions: { width: 600, height: 600 },
         intents: [
           <Button action= "/swirl" value="loadSwirl">Soon</Button>,
-          <Button action= "/block" value="swirl">Block</Button>,
+          <Button action= "/block">Block</Button>,
         ],
       })
     } 
@@ -743,7 +726,6 @@ app.frame('/block', async (c) => {
         if (swirl.ratings.some(rating => rating.fid === frameData?.fid)) {// one rating per user
           console.log("========= one rating per user")
 
-
           return c.res({
             image: (
               <div
@@ -767,7 +749,7 @@ app.frame('/block', async (c) => {
           imageOptions: { width: 600, height: 600 },
             intents: [
               <Button action="/block" value="stats">Stats</Button>, 
-              <Button action="/block" value="block">Block</Button>, 
+              <Button action="/block">Block</Button>, 
             ],
           })
         } else {//accept rating /block "stats" block stats
@@ -836,7 +818,7 @@ app.frame('/block', async (c) => {
           imageOptions: { width: 600, height: 600 },
           intents: [
             <Button action="/block" value="rate">Rate</Button>, 
-            <Button action="/block" value="block">Block</Button>,
+            <Button action="/block">Block</Button>,
           ],
         });
         
@@ -870,12 +852,12 @@ app.frame('/block', async (c) => {
           ),
           imageOptions: { width: 600, height: 600 },
             intents: [
-                <Button action="/swirl" value="block">Swirl</Button>,
-                <Button action="/block" value="block">Block</Button>,
+                <Button action="/swirl">Swirl</Button>,
+                <Button action="/block">Block</Button>,
             ],
         });
     
-      } else {//show block /swirl "block" swirl /block "stats" block
+      } else {//show block
         console.log("========= show block")
 
         return c.res({
@@ -900,7 +882,7 @@ app.frame('/block', async (c) => {
           ),
           imageOptions: { width: 600, height: 600 },
           intents: [
-            <Button action="/swirl" value="block">Swirl</Button>, 
+            <Button action="/swirl">Swirl</Button>, 
             <Button action="/block" value="stats">Stats</Button>, 
             // <Mint>, 
           ],
@@ -935,8 +917,8 @@ app.frame('/block', async (c) => {
       ),
       imageOptions: { width: 600, height: 600 },
         intents: [
-          <Button action="/swirl" value="block">Swirl</Button>, 
-          <Button action="/block" value="block">Block</Button>, 
+          <Button action="/swirl">Swirl</Button>, 
+          <Button action="/block">Block</Button>, 
         ],
       })
     } else if (frameData?.fid === frameData?.castId.fid){// Creator push synth?
@@ -967,10 +949,10 @@ app.frame('/block', async (c) => {
       imageOptions: { width: 600, height: 600 },
         intents: [
           <Button action="/block" value="creatorSynth">Yes</Button>, 
-          <Button action="/swirl" value="block">No</Button>, 
+          <Button action="/swirl">No</Button>, 
         ],
       })
-    } else { // No synth yet. /swirl "block" swirl /block "block" block
+    } else { // No synth yet.
       console.log("========= no synth yet")
 
       return c.res({
@@ -995,12 +977,12 @@ app.frame('/block', async (c) => {
         ),
         imageOptions: { width: 600, height: 600 },
         intents: [
-          <Button action="/swirl" value="block">Swirl</Button>, 
-          <Button action="/block" value="block">Block</Button>, 
+          <Button action="/swirl">Swirl</Button>, 
+          <Button action="/block">Block</Button>, 
         ],
       })
     }
-  } else {// No swirl yet. /swirl "block" swirl /block "block" block
+  } else {// No swirl yet.
     console.log("========= no swirl yet")
 
     return c.res({
@@ -1025,13 +1007,14 @@ app.frame('/block', async (c) => {
       ),
       imageOptions: { width: 600, height: 600 },
       intents: [
-        <Button action="/swirl" value="loadSwirl">Swirl</Button>, 
-        <Button action="/block" value="block">Block</Button>, 
+        <Button action="/swirl">Swirl</Button>, 
+        <Button action="/block">Block</Button>, 
       ],
     })
 
   }
 })
+
 
 
 const port = 3000

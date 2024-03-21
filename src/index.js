@@ -17,7 +17,7 @@ const emptySwirl = {
     castId: "",
     creatorId: 0,
     inspiration: "",
-    blender: "",
+    emulsifier: "",
     currentTurn: 0,
     turns: 0,
     responses: [],
@@ -109,7 +109,7 @@ async function synthesize(swirl, shortenMessage = "", counter = 0) {
             const completionBody = {
                 model: "gpt-3.5-turbo",
                 messages: [
-                    { role: "system", content: `${contextPlusInspiration} ${swirl.blender}` },
+                    { role: "system", content: `${contextPlusInspiration} ${swirl.emulsifier}` },
                     { role: "user", content: chunk }
                 ],
             };
@@ -153,8 +153,6 @@ function chunkAndCleanResponses(responses, maxChunkSize) {
     if (currentChunk.length > 0) {
         result.push(currentChunk);
     }
-    console.log(`+_+_+_+_+_+__+_+_+_+_+_+_+__result = ${result}`);
-    console.log(`Chunked responses = ${result.join('')}`);
     return result;
 }
 function calculateAverages(responses, ratings) {
@@ -185,28 +183,27 @@ function renderSwirlWithUniqueColors(swirl) {
     const shuffledColors = shuffleArray(colors);
     const fullText = `Inspiration: ${swirl.inspiration}\n` +
         swirl.responses.map(item => item.response).join('\n') +
-        `\nBlender: ${swirl.blender}`;
+        `\nEmulsifier: ${swirl.emulsifier}`;
     const responsesWithExtras = fullText.split('\n').map((line, index) => (_jsx("div", { style: { color: shuffledColors[index % shuffledColors.length] }, children: line }, index)));
     return responsesWithExtras;
 }
-console.log('API Key:', process.env.NEYNAR_API_KEY ?? 'default_api_key');
 //// Frog
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
         creatorId: 0,
         inspiration: "",
-        blender: ""
+        emulsifier: ""
     },
     secret: process.env.FROG_SECRET
 });
 console.log("app -----", app)
 // Middleware
 app.use(async (c, next) => {
-    console.log(`Middleware [${c.req.method}] ${c.req.url} ${c.req.body}`);
+    console.log(`Middleware [${c.req.method}] ${c.req.url}`);
     console.log(c.res);
     console.log(c.res.headers);
     console.log(c.res.status);
@@ -276,7 +273,7 @@ app.frame('/', async (c) => {
         // },
         intents: [
             _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
-            _jsx(Button, { action: "/block", value: "create", children: "Block" }),
+            _jsx(Button, { action: "/block", value: "loadBlock", children: "Block" }),
         ],
     });
 });
@@ -296,7 +293,7 @@ app.frame('/swirl', async (c) => {
     console.log(swirl);
     if (swirl.castId) { // Swirl exists
         console.log("-------- swirl in json");
-        if (swirl.synthesis) { // Synth exists, no more messages X
+        if (swirl.synthesis) { // Synth exists, no more messages
             console.log("------- synthesis exists, no more messages");
             const swirlContent = renderSwirlWithUniqueColors(swirl);
             return c.res({
@@ -315,12 +312,12 @@ app.frame('/swirl', async (c) => {
                     }, children: swirlContent })),
                 imageOptions: { width: 600, height: 600 },
                 intents: [
-                    _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
-                    _jsx(Button, { action: "/block", value: "swirl", children: "Block" }),
+                    _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                    _jsx(Button, { action: "/block", children: "Block" }),
                 ],
             });
         }
-        else if (buttonValue === "merge") { // Save and serve, synth if last turn
+        else if (buttonValue === "merge") {// Save response, show swirl, synthesize if all responses are in
             console.log("--------save and serve");
             const newResponse = { fid: frameData?.fid, response: sanitizedText };
             const index = swirl.responses.findIndex(response => response.fid === newResponse.fid);
@@ -354,8 +351,8 @@ app.frame('/swirl', async (c) => {
                     }, children: swirlContent })),
                 imageOptions: { width: 600, height: 600 },
                 intents: [
-                    _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
-                    _jsx(Button, { action: "/block", value: "swirl", children: "Block" }),
+                    _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                    _jsx(Button, { action: "/block", children: "Block" }),
                 ],
             });
         }
@@ -383,7 +380,7 @@ app.frame('/swirl', async (c) => {
                 ],
             });
         }
-        else { // One message per user X
+        else { // One message per user 
             console.log("------- one message per user");
             const swirlContent = renderSwirlWithUniqueColors(swirl);
             return c.res({
@@ -402,18 +399,18 @@ app.frame('/swirl', async (c) => {
                     }, children: swirlContent })),
                 imageOptions: { width: 600, height: 600 },
                 intents: [
-                    _jsx(TextInput, { placeholder: "One message per account..." }),
+                    _jsx(TextInput, { placeholder: "One message per person..." }),
                     _jsx(Button, { action: "/swirl", value: "merge", children: "Replace Your Message" }),
-                    _jsx(Button, { action: "/block", value: "swirl", children: "Block" }),
+                    _jsx(Button, { action: "/block", children: "Block" }),
                 ],
             });
         }
     }
-    else { // Swirl does not exist X
+    else { // Swirl does not exist 
         console.log("-------- swirl not in json");
-        if (frameData?.fid === frameData?.castId.fid) { // Creator can create X
+        if (frameData?.fid === frameData?.castId.fid) { // Creator can create 
             console.log("--------creator can create");
-            if (buttonValue === "loadSwirl") { // Creator can inspire X
+            if (buttonValue === "loadSwirl") { // Creator can inspire 
                 console.log("--------creator can inspire");
                 const needsLineBreak = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`;
                 const inspiration = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
@@ -439,8 +436,8 @@ app.frame('/swirl', async (c) => {
                     ],
                 });
             }
-            else if (buttonValue === "inspiration") { // Creator can blend X
-                console.log("--------creator can blend");
+            else if (buttonValue === "inspiration") { // Creator can emulsify X
+                console.log("--------creator can emulsify");
                 if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
                     state.inspiration = sanitizedText;
                 }
@@ -466,20 +463,20 @@ app.frame('/swirl', async (c) => {
                     imageOptions: { width: 600, height: 600 },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),
-                        _jsx(Button, { action: "/swirl", value: "blender", children: "Wow" }),
-                        _jsx(Button, { action: "/swirl", value: "blender", children: "No" }),
+                        _jsx(Button, { action: "/swirl", value: "emulsifier", children: "Wow" }),
+                        _jsx(Button, { action: "/swirl", value: "emulsifier", children: "No" }),
                     ],
                 });
             }
-            else if (buttonValue === "blender") { // Creator can confirm X
+            else if (buttonValue === "emulsifier") { // Creator can confirm X
                 console.log("--------creator can confirm");
                 if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
-                    state.blender = sanitizedText;
+                    state.emulsifier = sanitizedText;
                 }
                 else {
-                    state.blender = '';
+                    state.emulsifier = '';
                 }
-                const needsLineBreak = `Inspiration: ${swirl.inspiration}\nBlender: ${swirl.blender}\n\nDoes this look good?`;
+                const needsLineBreak = `Inspiration: ${swirl.inspiration}\nEmulsifier: ${swirl.emulsifier}\n\nDoes this look good?`;
                 const lookGood = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
                 return c.res({
                     image: (_jsx("div", { style: {
@@ -502,12 +499,12 @@ app.frame('/swirl', async (c) => {
                     ],
                 });
             }
-            else { // Save new swirl, serve, accept message -> "merge" X
+            else { // Save new swirl, serve, accept message -> "merge" 
                 console.log("--------save and serve creator");
                 swirl.castId = frameData?.castId.hash;
                 swirl.creatorId = frameData?.castId.fid;
                 swirl.inspiration = state.inspiration;
-                swirl.blender = state.blender;
+                swirl.emulsifier = state.emulsifier;
                 swirl.currentTurn += 1;
                 swirl.turns = 6;
                 saveSwirl(swirl);
@@ -534,7 +531,7 @@ app.frame('/swirl', async (c) => {
                 });
             }
         }
-        else { // Not creator, wait X
+        else { // Not creator, wait 
             console.log("--------wait for creation");
             return c.res({
                 image: (_jsx("div", { style: {
@@ -553,7 +550,7 @@ app.frame('/swirl', async (c) => {
                 imageOptions: { width: 600, height: 600 },
                 intents: [
                     _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Soon" }),
-                    _jsx(Button, { action: "/block", value: "swirl", children: "Block" }),
+                    _jsx(Button, { action: "/block", children: "Block" }),
                 ],
             });
         }
@@ -587,7 +584,7 @@ app.frame('/block', async (c) => {
                         imageOptions: { width: 600, height: 600 },
                         intents: [
                             _jsx(Button, { action: "/block", value: "stats", children: "Stats" }),
-                            _jsx(Button, { action: "/block", value: "block", children: "Block" }),
+                            _jsx(Button, { action: "/block", children: "Block" }),
                         ],
                     });
                 }
@@ -639,7 +636,7 @@ app.frame('/block', async (c) => {
                     imageOptions: { width: 600, height: 600 },
                     intents: [
                         _jsx(Button, { action: "/block", value: "rate", children: "Rate" }),
-                        _jsx(Button, { action: "/block", value: "block", children: "Block" }),
+                        _jsx(Button, { action: "/block", children: "Block" }),
                     ],
                 });
             }
@@ -664,12 +661,12 @@ app.frame('/block', async (c) => {
                         }, children: "Your rating has been saved." })),
                     imageOptions: { width: 600, height: 600 },
                     intents: [
-                        _jsx(Button, { action: "/swirl", value: "block", children: "Swirl" }),
-                        _jsx(Button, { action: "/block", value: "block", children: "Block" }),
+                        _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                        _jsx(Button, { action: "/block", children: "Block" }),
                     ],
                 });
             }
-            else { //show block /swirl "block" swirl /block "stats" block
+            else { //show block
                 console.log("========= show block");
                 return c.res({
                     image: (_jsx("div", { style: {
@@ -687,7 +684,7 @@ app.frame('/block', async (c) => {
                         }, children: swirl.synthesis })),
                     imageOptions: { width: 600, height: 600 },
                     intents: [
-                        _jsx(Button, { action: "/swirl", value: "block", children: "Swirl" }),
+                        _jsx(Button, { action: "/swirl", children: "Swirl" }),
                         _jsx(Button, { action: "/block", value: "stats", children: "Stats" }),
                         // <Mint>, 
                     ],
@@ -715,8 +712,8 @@ app.frame('/block', async (c) => {
                     }, children: swirl.synthesis })),
                 imageOptions: { width: 600, height: 600 },
                 intents: [
-                    _jsx(Button, { action: "/swirl", value: "block", children: "Swirl" }),
-                    _jsx(Button, { action: "/block", value: "block", children: "Block" }),
+                    _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                    _jsx(Button, { action: "/block", children: "Block" }),
                 ],
             });
         }
@@ -740,11 +737,11 @@ app.frame('/block', async (c) => {
                 imageOptions: { width: 600, height: 600 },
                 intents: [
                     _jsx(Button, { action: "/block", value: "creatorSynth", children: "Yes" }),
-                    _jsx(Button, { action: "/swirl", value: "block", children: "No" }),
+                    _jsx(Button, { action: "/swirl", children: "No" }),
                 ],
             });
         }
-        else { // No synth yet. /swirl "block" swirl /block "block" block
+        else { // No synth yet. 
             console.log("========= no synth yet");
             return c.res({
                 image: (_jsx("div", { style: {
@@ -762,13 +759,13 @@ app.frame('/block', async (c) => {
                     }, children: "The Swirl has not finished. Check back soon." })),
                 imageOptions: { width: 600, height: 600 },
                 intents: [
-                    _jsx(Button, { action: "/swirl", value: "block", children: "Swirl" }),
-                    _jsx(Button, { action: "/block", value: "block", children: "Block" }),
+                    _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                    _jsx(Button, { action: "/block", children: "Block" }),
                 ],
             });
         }
     }
-    else { // No swirl yet. /swirl "block" swirl /block "block" block
+    else { // No swirl yet.
         console.log("========= no swirl yet");
         return c.res({
             image: (_jsx("div", { style: {
@@ -786,12 +783,13 @@ app.frame('/block', async (c) => {
                 }, children: "The Swirl has not started yet. Check back soon." })),
             imageOptions: { width: 600, height: 600 },
             intents: [
-                _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
-                _jsx(Button, { action: "/block", value: "block", children: "Block" }),
+                _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                _jsx(Button, { action: "/block", children: "Block" }),
             ],
         });
     }
 });
+
 const port = 3000;
 console.log(`Server is running on port ${port}`);
 serve({
