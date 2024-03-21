@@ -11,7 +11,7 @@ const openai = new OpenAI.OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 //// Swirl data
-const swirlJson = 'swirlsData.json';
+const swirlJson = 'src/swirlsData.json';
 // Define an empty swirl object
 const emptySwirl = {
     castId: "",
@@ -194,8 +194,7 @@ console.log('API Key:', process.env.NEYNAR_API_KEY ?? 'default_api_key');
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
-    // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
+    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
         creatorId: 0,
@@ -204,13 +203,14 @@ export const app = new Frog({
     },
     secret: process.env.FROG_SECRET
 });
+console.log("app -----", app)
 // Middleware
 app.use(async (c, next) => {
     console.log(`Middleware [${c.req.method}] ${c.req.url} ${c.req.body}`);
     console.log(c.res);
     console.log(c.res.headers);
     console.log(c.res.status);
-    console.log(`Middleware 4`);
+    console.log(`Middleware 2`);
     await next();
 });
 
@@ -255,38 +255,16 @@ const images = [
 ];
 function getRandomImage() {
     const randomIndex = Math.floor(Math.random() * images.length);
-    const cacheBuster = new Date().getTime(); // Current timestamp as cache buster
+    const now = new Date();
+    const cacheBuster = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()).getTime();
     return `${images[randomIndex]}?cb=${cacheBuster}`;
 }
+
 app.frame('/', async (c) => {
-});
-app.frame('/swirl', async (c) => {
     console.log("-----------frame at initial cast");
-    console.log(c);
-    const body = await c.req.parseBody();
-    console.log("---- body");
-    console.log(body);
+
     const randomImageUrl = getRandomImage();
     console.log(randomImageUrl);
-
-    /// stuff for first /swirl
-    const { buttonValue, frameData, inputText, deriveState } = c;
-    const state = deriveState(previousState => { });
-    console.log(state);
-    let sanitizedText;
-    console.log("c req method", c.req.method);
-    if (inputText !== undefined) {
-        sanitizedText = sanitizeText(inputText);
-    }
-    else {
-        sanitizedText = undefined;
-    }
-    console.log(frameData);
-    console.log(c);
-    const swirl = findSwirlDataByCastId(frameData?.castId.hash);
-    console.log(swirl);
-
-    if (c.req.method === 'GET') {
     return c.res({
         image: randomImageUrl,
         // imageOptions: {
@@ -301,7 +279,22 @@ app.frame('/swirl', async (c) => {
             _jsx(Button, { action: "/block", value: "create", children: "Block" }),
         ],
     });
-    } else if (swirl.castId) { // Swirl exists
+});
+app.frame('/swirl', async (c) => {
+    const { buttonValue, frameData, inputText, deriveState } = c;
+    const state = deriveState(previousState => { });
+    let sanitizedText;
+    if (inputText !== undefined) {
+        sanitizedText = sanitizeText(inputText);
+    }
+    else {
+        sanitizedText = undefined;
+    }
+    const swirl = findSwirlDataByCastId(frameData?.castId.hash);
+    console.log(c);
+    console.log(state);
+    console.log(swirl);
+    if (swirl.castId) { // Swirl exists
         console.log("-------- swirl in json");
         if (swirl.synthesis) { // Synth exists, no more messages X
             console.log("------- synthesis exists, no more messages");
