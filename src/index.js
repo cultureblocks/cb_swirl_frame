@@ -194,7 +194,7 @@ console.log('API Key:', process.env.NEYNAR_API_KEY ?? 'default_api_key');
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' }),
     initialState: {
         castId: 0,
@@ -206,53 +206,52 @@ export const app = new Frog({
 });
 // Middleware
 app.use(async (c, next) => {
-    console.log(`Middleware [${c.req.method}] ${c.req.url}`);
-    console.log(c.res.body);
-    console.log(`Middleware 2`);
-    console.log(c.res.blob);
-    console.log(`Middleware 3`);
+    console.log(`Middleware [${c.req.method}] ${c.req.url} ${c.req.body}`);
+    console.log(c.res);
     console.log(c.res.headers);
-    console.log(`Middleware 4`);
     console.log(c.res.status);
+    console.log(`Middleware 4`);
     await next();
 });
+
+
 // Intro Swirl Frame
 const images = [
-    "http://cultureblocks.world/images/imageOne.jpeg",
-    "http://cultureblocks.world/images/imageTwo.jpeg",
-    "http://cultureblocks.world/images/imageThree.jpeg",
-    "http://cultureblocks.world/images/imageFour.jpeg",
-    "http://cultureblocks.world/images/imageFive.jpeg",
-    "http://cultureblocks.world/images/imageSix.jpeg",
-    "http://cultureblocks.world/images/imageSeven.jpeg",
-    "http://cultureblocks.world/images/imageEight.jpeg",
-    "http://cultureblocks.world/images/imageNine.jpeg",
-    "http://cultureblocks.world/images/imageTen.jpeg",
-    "http://cultureblocks.world/images/imageEleven.jpeg",
-    "http://cultureblocks.world/images/imageTwelve.jpeg",
-    "http://cultureblocks.world/images/imageThirteen.jpeg",
-    "http://cultureblocks.world/images/imageFourteen.jpeg",
-    "http://cultureblocks.world/images/imageFifteen.jpeg",
-    "http://cultureblocks.world/images/imageSixteen.jpeg",
-    "http://cultureblocks.world/images/imageSeventeen.jpeg",
-    "http://cultureblocks.world/images/imageEighteen.jpeg",
-    "http://cultureblocks.world/images/imageNineteen.jpeg",
-    "http://cultureblocks.world/images/imageTwenty.jpeg",
-    "http://cultureblocks.world/images/imageTwentyOne.jpeg",
-    "http://cultureblocks.world/images/imageTwentyTwo.jpeg",
-    "http://cultureblocks.world/images/imageTwentyThree.jpeg",
-    "http://cultureblocks.world/images/imageTwentyFour.jpeg",
-    "http://cultureblocks.world/images/imageTwentyFive.jpeg",
-    "http://cultureblocks.world/images/imageTwentySix.jpeg",
-    "http://cultureblocks.world/images/imageTwentySeven.jpeg",
-    "http://cultureblocks.world/images/imageTwentyEight.jpeg",
-    "http://cultureblocks.world/images/imageTwentyNine.jpeg",
-    "http://cultureblocks.world/images/imageThirty.jpeg",
-    "http://cultureblocks.world/images/imageThirtyOne.jpeg",
-    "http://cultureblocks.world/images/imageThirtyTwo.jpeg",
-    "http://cultureblocks.world/images/imageThirtyThree.jpeg",
-    "http://cultureblocks.world/images/imageThirtyFour.jpeg",
-    "http://cultureblocks.world/images/imageThirtyFive.jpeg"
+    "https://cultureblocks.world/images/imageOne.jpeg",
+    "https://cultureblocks.world/images/imageTwo.jpeg",
+    "https://cultureblocks.world/images/imageThree.jpeg",
+    "https://cultureblocks.world/images/imageFour.jpeg",
+    "https://cultureblocks.world/images/imageFive.jpeg",
+    "https://cultureblocks.world/images/imageSix.jpeg",
+    "https://cultureblocks.world/images/imageSeven.jpeg",
+    "https://cultureblocks.world/images/imageEight.jpeg",
+    "https://cultureblocks.world/images/imageNine.jpeg",
+    "https://cultureblocks.world/images/imageTen.jpeg",
+    "https://cultureblocks.world/images/imageEleven.jpeg",
+    "https://cultureblocks.world/images/imageTwelve.jpeg",
+    "https://cultureblocks.world/images/imageThirteen.jpeg",
+    "https://cultureblocks.world/images/imageFourteen.jpeg",
+    "https://cultureblocks.world/images/imageFifteen.jpeg",
+    "https://cultureblocks.world/images/imageSixteen.jpeg",
+    "https://cultureblocks.world/images/imageSeventeen.jpeg",
+    "https://cultureblocks.world/images/imageEighteen.jpeg",
+    "https://cultureblocks.world/images/imageNineteen.jpeg",
+    "https://cultureblocks.world/images/imageTwenty.jpeg",
+    "https://cultureblocks.world/images/imageTwentyOne.jpeg",
+    "https://cultureblocks.world/images/imageTwentyTwo.jpeg",
+    "https://cultureblocks.world/images/imageTwentyThree.jpeg",
+    "https://cultureblocks.world/images/imageTwentyFour.jpeg",
+    "https://cultureblocks.world/images/imageTwentyFive.jpeg",
+    "https://cultureblocks.world/images/imageTwentySix.jpeg",
+    "https://cultureblocks.world/images/imageTwentySeven.jpeg",
+    "https://cultureblocks.world/images/imageTwentyEight.jpeg",
+    "https://cultureblocks.world/images/imageTwentyNine.jpeg",
+    "https://cultureblocks.world/images/imageThirty.jpeg",
+    "https://cultureblocks.world/images/imageThirtyOne.jpeg",
+    "https://cultureblocks.world/images/imageThirtyTwo.jpeg",
+    "https://cultureblocks.world/images/imageThirtyThree.jpeg",
+    "https://cultureblocks.world/images/imageThirtyFour.jpeg",
+    "https://cultureblocks.world/images/imageThirtyFive.jpeg"
 ];
 function getRandomImage() {
     const randomIndex = Math.floor(Math.random() * images.length);
@@ -260,6 +259,8 @@ function getRandomImage() {
     return `${images[randomIndex]}?cb=${cacheBuster}`;
 }
 app.frame('/', async (c) => {
+});
+app.frame('/swirl', async (c) => {
     console.log("-----------frame at initial cast");
     console.log(c);
     const body = await c.req.parseBody();
@@ -267,6 +268,25 @@ app.frame('/', async (c) => {
     console.log(body);
     const randomImageUrl = getRandomImage();
     console.log(randomImageUrl);
+
+    /// stuff for first /swirl
+    const { buttonValue, frameData, inputText, deriveState } = c;
+    const state = deriveState(previousState => { });
+    console.log(state);
+    let sanitizedText;
+    console.log("c req method", c.req.method);
+    if (inputText !== undefined) {
+        sanitizedText = sanitizeText(inputText);
+    }
+    else {
+        sanitizedText = undefined;
+    }
+    console.log(frameData);
+    console.log(c);
+    const swirl = findSwirlDataByCastId(frameData?.castId.hash);
+    console.log(swirl);
+
+    if (c.req.method === 'GET') {
     return c.res({
         image: randomImageUrl,
         // imageOptions: {
@@ -281,23 +301,7 @@ app.frame('/', async (c) => {
             _jsx(Button, { action: "/block", value: "create", children: "Block" }),
         ],
     });
-});
-app.frame('/swirl', async (c) => {
-    const { buttonValue, frameData, inputText, deriveState } = c;
-    const state = deriveState(previousState => { });
-    console.log(state);
-    let sanitizedText;
-    if (inputText !== undefined) {
-        sanitizedText = sanitizeText(inputText);
-    }
-    else {
-        sanitizedText = undefined;
-    }
-    console.log(frameData);
-    console.log(c);
-    const swirl = findSwirlDataByCastId(frameData?.castId.hash);
-    console.log(swirl);
-    if (swirl.castId) { // Swirl exists
+    } else if (swirl.castId) { // Swirl exists
         console.log("-------- swirl in json");
         if (swirl.synthesis) { // Synth exists, no more messages X
             console.log("------- synthesis exists, no more messages");
