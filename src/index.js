@@ -84,7 +84,6 @@ function sanitizeText(text) {
 async function synthesize(swirl, shortenMessage = "", counter = 0) {
     console.log(`counter = ${counter}`);
     if (counter > 5) {
-        console.log("I couldn't get the synthesis short enough, sorry!");
         return "";
     }
     const context = "The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.";
@@ -94,9 +93,7 @@ async function synthesize(swirl, shortenMessage = "", counter = 0) {
     const chunks = chunkAndCleanResponses(swirl.responses, tokenBudget);
     let synthesisResult = "";
     try {
-        console.log(`Chunkssss = ${chunks}`);
         for (const chunk of chunks) {
-            console.log(`Chunk = ${chunk}`);
             const completionBody = {
                 model: "gpt-3.5-turbo",
                 messages: [
@@ -192,61 +189,30 @@ export const app = new Frog({
     secret: process.env.FROG_SECRET
 });
 // Middleware
-app.use(async (c, next) => {
-    console.log(`Middleware [${c.req.method}] ${c.req.url}`);
-    console.log(c.res.headers);
-    console.log(c.res);
-    console.log(`Middleware 2`);
-    await next();
-});
+// app.use(async (c, next) => {
+//   console.log(`Middleware [${c.req.method}] ${c.req.url}`)
+//   console.log(c.res.headers);
+//   console.log(c.res);
+//   console.log(`Middleware 2`)
+//   await next()
+// })
 // Intro Swirl Frame
 const images = [
-    "One.jpeg",
-    "Two.jpeg",
-    "Three.jpeg",
-    "Four.jpeg",
-    "Five.jpeg",
-    "Six.jpeg",
-    "Seven.jpeg",
-    "Eight.jpeg",
-    "Nine.jpeg",
-    "Ten.jpeg",
-    "Eleven.jpeg",
-    "Twelve.jpeg",
-    "Thirteen.jpeg",
-    "Fourteen.jpeg",
-    "Fifteen.jpeg",
-    "Sixteen.jpeg",
-    "Seventeen.jpeg",
-    "Eighteen.jpeg",
-    "Nineteen.jpeg",
-    "Twenty.jpeg",
-    "TwentyOne.jpeg",
-    "TwentyTwo.jpeg",
-    "TwentyThree.jpeg",
-    "TwentyFour.jpeg",
-    "TwentyFive.jpeg",
-    "TwentySix.jpeg",
-    "TwentySeven.jpeg",
-    "TwentyEight.jpeg",
-    "TwentyNine.jpeg",
-    "Thirty.jpeg",
-    "ThirtyOne.jpeg",
-    "ThirtyTwo.jpeg",
-    "ThirtyThree.jpeg",
-    "ThirtyFour.jpeg",
-    "ThirtyFive.jpeg"
+    "One.jpeg", "Two.jpeg", "Three.jpeg", "Four.jpeg", "Five.jpeg",
+    "Six.jpeg", "Seven.jpeg", "Eight.jpeg", "Nine.jpeg", "Ten.jpeg",
+    "Eleven.jpeg", "Twelve.jpeg", "Thirteen.jpeg", "Fourteen.jpeg", "Fifteen.jpeg",
+    "Sixteen.jpeg", "Seventeen.jpeg", "Eighteen.jpeg", "Nineteen.jpeg", "Twenty.jpeg",
+    "TwentyOne.jpeg", "TwentyTwo.jpeg", "TwentyThree.jpeg", "TwentyFour.jpeg", "TwentyFive.jpeg",
+    "TwentySix.jpeg", "TwentySeven.jpeg", "TwentyEight.jpeg", "TwentyNine.jpeg", "Thirty.jpeg",
+    "ThirtyOne.jpeg", "ThirtyTwo.jpeg", "ThirtyThree.jpeg", "ThirtyFour.jpeg", "ThirtyFive.jpeg"
 ];
 function getRandomImage() {
     const randomIndex = Math.floor(Math.random() * images.length);
-    const now = new Date();
-    const cacheBuster = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()).getTime();
-    return `${process.env.IMG_URL_PREFIX + images[randomIndex]}?cb=${cacheBuster}`;
+    const cacheBuster = Date.now(); // Simplified cache buster based on current time in milliseconds
+    return `${process.env.IMG_URL_PREFIX}${images[randomIndex]}?cb=${cacheBuster}`;
 }
 app.frame('/', async (c) => {
-    console.log("-----------frame at initial cast");
     const randomImageUrl = getRandomImage();
-    console.log(randomImageUrl);
     return c.res({
         image: randomImageUrl,
         imageOptions: {
@@ -271,13 +237,8 @@ app.frame('/swirl', async (c) => {
         sanitizedText = undefined;
     }
     const swirl = findSwirlDataByCastId(frameData?.castId.hash);
-    console.log(c);
-    console.log(state);
-    console.log(swirl);
     if (swirl.castId) { // Swirl exists
-        console.log("-------- swirl in json");
         if (swirl.synthesis) { // Synth exists, no more messages
-            console.log("------- synthesis exists, no more messages");
             const swirlContent = renderSwirlWithUniqueColors(swirl);
             return c.res({
                 image: (_jsx("div", { style: {
@@ -301,7 +262,6 @@ app.frame('/swirl', async (c) => {
             });
         }
         else if (buttonValue === "merge") { // Save response, show swirl, synthesize if all responses are in
-            console.log("--------save and serve");
             const newResponse = { fid: frameData?.fid, response: sanitizedText };
             const index = swirl.responses.findIndex(response => response.fid === newResponse.fid);
             if (index !== -1) {
@@ -340,7 +300,6 @@ app.frame('/swirl', async (c) => {
             });
         }
         else if (!swirl.responses.some(response => response.fid === frameData?.fid)) { //If fid not in responses, User can respond
-            console.log("------- user can respond");
             const swirlContent = renderSwirlWithUniqueColors(swirl);
             return c.res({
                 image: (_jsx("div", { style: {
@@ -364,7 +323,6 @@ app.frame('/swirl', async (c) => {
             });
         }
         else { // One message per user 
-            console.log("------- one message per user");
             const swirlContent = renderSwirlWithUniqueColors(swirl);
             return c.res({
                 image: (_jsx("div", { style: {
@@ -390,11 +348,8 @@ app.frame('/swirl', async (c) => {
         }
     }
     else { // Swirl does not exist 
-        console.log("-------- swirl not in json");
         if (frameData?.fid === frameData?.castId.fid) { // Creator can create 
-            console.log("--------creator can create");
             if (buttonValue === "loadSwirl") { // Creator can inspire 
-                console.log("--------creator can inspire");
                 const needsLineBreak = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`;
                 const inspiration = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
                 return c.res({
@@ -420,7 +375,6 @@ app.frame('/swirl', async (c) => {
                 });
             }
             else if (buttonValue === "inspiration") { // Creator can emulsify X
-                console.log("--------creator can emulsify");
                 if (buttonIndex === 1 && sanitizedText !== undefined) {
                     state.inspiration = sanitizedText;
                 }
@@ -452,7 +406,6 @@ app.frame('/swirl', async (c) => {
                 });
             }
             else if (buttonValue === "emulsifier") { // Creator can confirm X
-                console.log("--------creator can confirm");
                 if (buttonIndex === 1 && sanitizedText !== undefined) {
                     state.emulsifier = sanitizedText;
                 }
@@ -483,7 +436,6 @@ app.frame('/swirl', async (c) => {
                 });
             }
             else { // Save new swirl, serve, accept message -> "merge" 
-                console.log("--------save and serve creator");
                 swirl.castId = frameData?.castId.hash;
                 swirl.creatorId = frameData?.castId.fid;
                 swirl.inspiration = state.inspiration;
@@ -515,7 +467,6 @@ app.frame('/swirl', async (c) => {
             }
         }
         else { // Not creator, wait 
-            console.log("--------wait for creation");
             return c.res({
                 image: (_jsx("div", { style: {
                         display: 'flex',
@@ -543,13 +494,9 @@ app.frame('/block', async (c) => {
     const { buttonValue, frameData, inputText } = c;
     const swirl = findSwirlDataByCastId(frameData?.castId.hash);
     if (swirl.castId) { // swirl exists
-        console.log("========= swirl exists");
         if (swirl.synthesis) { //synth + mint exist. /swirl "block" swirl /block "stats" block stats /mint
-            console.log("========= synth exists");
             if (buttonValue === "rate") { //add a rating if haven't
-                console.log("========= rating");
                 if (swirl.ratings.some(rating => rating.fid === frameData?.fid)) { // one rating per user
-                    console.log("========= one rating per user");
                     return c.res({
                         image: (_jsx("div", { style: {
                                 display: 'flex',
@@ -572,7 +519,6 @@ app.frame('/block', async (c) => {
                     });
                 }
                 else { //accept rating /block "stats" block stats
-                    console.log("========= enter rating");
                     return c.res({
                         image: (_jsx("div", { style: {
                                 display: 'flex',
@@ -598,7 +544,6 @@ app.frame('/block', async (c) => {
                 }
             }
             else if (buttonValue === "stats") { //show stats
-                console.log("========= stats");
                 const { participantAverage, totalAverage } = calculateAverages(swirl.responses, swirl.ratings);
                 const stats = `Participant average rating: ${participantAverage.toFixed(2)}\nTotal average rating: ${totalAverage.toFixed(2)}`;
                 const statsLines = stats.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
@@ -624,7 +569,6 @@ app.frame('/block', async (c) => {
                 });
             }
             else if (buttonValue !== undefined && ["1", "2", "3", "4"].includes(buttonValue)) { // Check if buttonValue is "1", "2", "3", or "4"
-                console.log("========= save new rating");
                 const rating = parseInt(buttonValue);
                 swirl.ratings.push({ fid: frameData?.fid, rating });
                 saveSwirl(swirl);
@@ -650,7 +594,6 @@ app.frame('/block', async (c) => {
                 });
             }
             else { //show block
-                console.log("========= show block");
                 return c.res({
                     image: (_jsx("div", { style: {
                             display: 'flex',
@@ -675,7 +618,6 @@ app.frame('/block', async (c) => {
             }
         }
         else if (buttonValue === "creatorSynth") { // Synth early
-            console.log("========= synth early");
             const synthesis = await synthesize(swirl, "", 0);
             swirl.synthesis = synthesis;
             saveSwirl(swirl);
@@ -701,7 +643,6 @@ app.frame('/block', async (c) => {
             });
         }
         else if (frameData?.fid === frameData?.castId.fid) { // Creator push synth?
-            console.log("========= creator synth?");
             const turnsLeft = `This swirl has ${swirl.turns - swirl.responses.length} turns left. Would you like to end it now and synthesize the responses? The frame might freeze for a bit while it synthesizes the responses.`;
             return c.res({
                 image: (_jsx("div", { style: {
@@ -725,7 +666,6 @@ app.frame('/block', async (c) => {
             });
         }
         else { // No synth yet.
-            console.log("========= no synth yet");
             return c.res({
                 image: (_jsx("div", { style: {
                         display: 'flex',
@@ -749,7 +689,6 @@ app.frame('/block', async (c) => {
         }
     }
     else { // No swirl yet.
-        console.log("========= no swirl yet");
         return c.res({
             image: (_jsx("div", { style: {
                     display: 'flex',
