@@ -271,8 +271,11 @@ export const app = new Frog({
 
 app.use(async (c, next) => {
   console.log(`Middleware [${c.req.method}] ${c.req.url}`)
-  console.log(c.res)
+  const myCookieValue = "your_cookie_value";
   console.log(c.res.headers);
+  c.res.headers.append("Set-Cookie", `myCookie=${myCookieValue}; SameSite=None; Secure; Path=/`);
+  console.log(c.res.headers);
+  console.log(c.res);
   console.log(c.res.status);
   console.log(`Middleware 2`)
   await next()
@@ -283,41 +286,41 @@ app.use(async (c, next) => {
 // Intro Swirl Frame
 
 const images = [
-  "https://cultureblocks.world/images/imageOne.jpeg",
-  "https://cultureblocks.world/images/imageTwo.jpeg",
-  "https://cultureblocks.world/images/imageThree.jpeg",
-  "https://cultureblocks.world/images/imageFour.jpeg",
-  "https://cultureblocks.world/images/imageFive.jpeg",
-  "https://cultureblocks.world/images/imageSix.jpeg",
-  "https://cultureblocks.world/images/imageSeven.jpeg",
-  "https://cultureblocks.world/images/imageEight.jpeg",
-  "https://cultureblocks.world/images/imageNine.jpeg",
-  "https://cultureblocks.world/images/imageTen.jpeg",
-  "https://cultureblocks.world/images/imageEleven.jpeg",
-  "https://cultureblocks.world/images/imageTwelve.jpeg",
-  "https://cultureblocks.world/images/imageThirteen.jpeg",
-  "https://cultureblocks.world/images/imageFourteen.jpeg",
-  "https://cultureblocks.world/images/imageFifteen.jpeg",
-  "https://cultureblocks.world/images/imageSixteen.jpeg",
-  "https://cultureblocks.world/images/imageSeventeen.jpeg",
-  "https://cultureblocks.world/images/imageEighteen.jpeg",
-  "https://cultureblocks.world/images/imageNineteen.jpeg",
-  "https://cultureblocks.world/images/imageTwenty.jpeg",
-  "https://cultureblocks.world/images/imageTwentyOne.jpeg",
-  "https://cultureblocks.world/images/imageTwentyTwo.jpeg",
-  "https://cultureblocks.world/images/imageTwentyThree.jpeg",
-  "https://cultureblocks.world/images/imageTwentyFour.jpeg",
-  "https://cultureblocks.world/images/imageTwentyFive.jpeg",
-  "https://cultureblocks.world/images/imageTwentySix.jpeg",
-  "https://cultureblocks.world/images/imageTwentySeven.jpeg",
-  "https://cultureblocks.world/images/imageTwentyEight.jpeg",
-  "https://cultureblocks.world/images/imageTwentyNine.jpeg",
-  "https://cultureblocks.world/images/imageThirty.jpeg",
-  "https://cultureblocks.world/images/imageThirtyOne.jpeg",
-  "https://cultureblocks.world/images/imageThirtyTwo.jpeg",
-  "https://cultureblocks.world/images/imageThirtyThree.jpeg",
-  "https://cultureblocks.world/images/imageThirtyFour.jpeg",
-  "https://cultureblocks.world/images/imageThirtyFive.jpeg"
+  "One.jpeg",
+  "Two.jpeg",
+  "Three.jpeg",
+  "Four.jpeg",
+  "Five.jpeg",
+  "Six.jpeg",
+  "Seven.jpeg",
+  "Eight.jpeg",
+  "Nine.jpeg",
+  "Ten.jpeg",
+  "Eleven.jpeg",
+  "Twelve.jpeg",
+  "Thirteen.jpeg",
+  "Fourteen.jpeg",
+  "Fifteen.jpeg",
+  "Sixteen.jpeg",
+  "Seventeen.jpeg",
+  "Eighteen.jpeg",
+  "Nineteen.jpeg",
+  "Twenty.jpeg",
+  "TwentyOne.jpeg",
+  "TwentyTwo.jpeg",
+  "TwentyThree.jpeg",
+  "TwentyFour.jpeg",
+  "TwentyFive.jpeg",
+  "TwentySix.jpeg",
+  "TwentySeven.jpeg",
+  "TwentyEight.jpeg",
+  "TwentyNine.jpeg",
+  "Thirty.jpeg",
+  "ThirtyOne.jpeg",
+  "ThirtyTwo.jpeg",
+  "ThirtyThree.jpeg",
+  "ThirtyFour.jpeg",
+  "ThirtyFive.jpeg"
 ];
 
 
@@ -325,7 +328,7 @@ function getRandomImage() {
   const randomIndex = Math.floor(Math.random() * images.length);
   const now = new Date();
   const cacheBuster = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), now.getMinutes()).getTime();
-  return `${images[randomIndex]}?cb=${cacheBuster}`;
+  return `${process.env.IMG_URL_PREFIX + images[randomIndex]}?cb=${cacheBuster}`;
 }
 
 app.frame('/', async (c) => {
@@ -335,13 +338,11 @@ app.frame('/', async (c) => {
   console.log(randomImageUrl)
   return c.res({
     image: randomImageUrl, 
-    // imageOptions: {
-    //   headers: {
-    //     'Cache-Control': 'no-cache, no-store, must-revalidate',
-    //     'Pragma': 'no-cache',
-    //     'Expires': '0',
-    //   }
-    // },
+    imageOptions: {
+      headers: {
+        'Cache-Control': 'max-age=0'
+      }
+    },
     intents: [
       <Button action="/swirl" value="loadSwirl">Swirl</Button>,
       <Button action="/block" value="loadBlock">Block</Button>,
