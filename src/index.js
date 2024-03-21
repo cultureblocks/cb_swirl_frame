@@ -191,7 +191,7 @@ function renderSwirlWithUniqueColors(swirl) {
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
         creatorId: 0,
@@ -270,7 +270,7 @@ app.frame('/', async (c) => {
     });
 });
 app.frame('/swirl', async (c) => {
-    const { buttonValue, frameData, inputText, deriveState } = c;
+    const { buttonValue, buttonIndex, frameData, inputText, deriveState } = c;
     const state = deriveState(previousState => { });
     let sanitizedText;
     if (inputText !== undefined) {
@@ -430,7 +430,7 @@ app.frame('/swirl', async (c) => {
             }
             else if (buttonValue === "inspiration") { // Creator can emulsify X
                 console.log("--------creator can emulsify");
-                if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
+                if (buttonIndex === 1 && sanitizedText !== undefined) {
                     state.inspiration = sanitizedText;
                 }
                 else {
@@ -460,9 +460,9 @@ app.frame('/swirl', async (c) => {
                     ],
                 });
             }
-            else if (buttonValue === "emulsifier") { // Creator can confirm 
+            else if (buttonValue === "emulsifier") { // Creator can confirm X
                 console.log("--------creator can confirm");
-                if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
+                if (buttonIndex === 1 && sanitizedText !== undefined) {
                     state.emulsifier = sanitizedText;
                 }
                 else {
@@ -775,7 +775,7 @@ app.frame('/block', async (c) => {
                 }, children: "The Swirl has not started yet. Check back soon." })),
             imageOptions: { width: 600, height: 600 },
             intents: [
-                _jsx(Button, { action: "/swirl", children: "Swirl" }),
+                _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
                 _jsx(Button, { action: "/block", children: "Block" }),
             ],
         });

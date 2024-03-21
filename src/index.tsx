@@ -348,7 +348,7 @@ app.frame('/', async (c) => {
 
 
 app.frame('/swirl', async (c) => {
-  const { buttonValue, frameData, inputText, deriveState} = c
+  const { buttonValue, buttonIndex, frameData, inputText, deriveState} = c
   const state = deriveState(previousState => {})  
   let sanitizedText: string | undefined
   if (inputText !== undefined) {
@@ -552,7 +552,7 @@ app.frame('/swirl', async (c) => {
       } else if (buttonValue === "inspiration"){ // Creator can emulsify X
         console.log("--------creator can emulsify")
 
-        if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
+        if (buttonIndex === 1 && sanitizedText !== undefined) {
           state.inspiration = sanitizedText;
         } else {
           state.inspiration = '';
@@ -593,7 +593,7 @@ app.frame('/swirl', async (c) => {
       } else if (buttonValue === "emulsifier"){ // Creator can confirm X
         console.log("--------creator can confirm")
         
-        if (typeof sanitizedText === 'string' && sanitizedText.trim().length > 0) {
+        if (buttonIndex === 1 && sanitizedText !== undefined) {
           state.emulsifier = sanitizedText;
         } else {
           state.emulsifier = '';
@@ -1004,7 +1004,7 @@ app.frame('/block', async (c) => {
       ),
       imageOptions: { width: 600, height: 600 },
       intents: [
-        <Button action="/swirl">Swirl</Button>, 
+        <Button action="/swirl" value="loadSwirl">Swirl</Button>, 
         <Button action="/block">Block</Button>, 
       ],
     })
