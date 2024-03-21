@@ -203,12 +203,8 @@ export const app = new Frog({
 // Middleware
 app.use(async (c, next) => {
     console.log(`Middleware [${c.req.method}] ${c.req.url}`);
-    const myCookieValue = "your_cookie_value";
-    console.log(c.res.headers);
-    c.res.headers.append("Set-Cookie", `myCookie=${myCookieValue}; SameSite=None; Secure; Path=/`);
     console.log(c.res.headers);
     console.log(c.res);
-    console.log(c.res.status);
     console.log(`Middleware 2`);
     await next();
 });
