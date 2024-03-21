@@ -73,22 +73,13 @@ function loadSwirls(filename) {
 // Get Synthesis 
 function sanitizeText(text) {
     text = text.replace(/\s+/g, " ");
-    text = text.replace(/([^'])'(?!\s|$)/g, "$1'");
-    text = text.replace(/(?<!\S)"(?!\S)/g, "\"");
-    text = text.replace(/<[^>]*>/g, "");
-    text = escapeSpecialCharacters(text);
+    text = text.replace(/&/g, "&amp;");
+    text = text.replace(/</g, "&lt;");
+    text = text.replace(/>/g, "&gt;");
+    text = text.replace(/"/g, "&quot;");
+    text = text.replace(/'/g, "&#x27;");
+    text = text.replace(/\//g, "&#x2F;");
     return text;
-}
-function escapeSpecialCharacters(text) {
-    const specialCharacters = {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#x27;",
-        "/": "&#x2F;"
-    };
-    return text.replace(/[&<>"'/]/g, (match) => specialCharacters[match]);
 }
 async function synthesize(swirl, shortenMessage = "", counter = 0) {
     console.log(`counter = ${counter}`);
@@ -191,7 +182,7 @@ function renderSwirlWithUniqueColors(swirl) {
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
         creatorId: 0,

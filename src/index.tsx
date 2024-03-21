@@ -98,25 +98,15 @@ function loadSwirls(filename: string): SwirlsData | null {
 
 function sanitizeText(text: string): string {
   text = text.replace(/\s+/g, " ");
-  text = text.replace(/([^'])'(?!\s|$)/g, "$1'");
-  text = text.replace(/(?<!\S)"(?!\S)/g, "\"");
-  text = text.replace(/<[^>]*>/g, "");
-  text = escapeSpecialCharacters(text);
+  text = text.replace(/&/g, "&amp;");
+  text = text.replace(/</g, "&lt;");
+  text = text.replace(/>/g, "&gt;");
+  text = text.replace(/"/g, "&quot;");
+  text = text.replace(/'/g, "&#x27;");
+  text = text.replace(/\//g, "&#x2F;");
   return text;
 }
 
-function escapeSpecialCharacters(text: string): string {
-  const specialCharacters: {[key: string]: string} = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#x27;",
-      "/": "&#x2F;"
-  };
-
-  return text.replace(/[&<>"'/]/g, (match) => specialCharacters[match]);
-}
 
 async function synthesize(swirl: Swirl, shortenMessage = "", counter = 0): Promise<string> {
   console.log(`counter = ${counter}`);
