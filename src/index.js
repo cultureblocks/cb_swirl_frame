@@ -190,7 +190,7 @@ export const app = new Frog({
 });
 // Middleware
  app.use(async (c, next) => {
-   console.log(`Middleware [${c.req}]`)
+   console.log(`Middleware [${c.req.method}]`)
    console.log(c.res.headers);
 //   console.log(c.res);
 //   console.log(`Middleware 2`)
