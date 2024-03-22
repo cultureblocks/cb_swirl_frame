@@ -367,7 +367,7 @@ app.frame('/swirl', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: inspiration })),
-                    imageOptions: { width: 600, height: 600, headers: {'content-type':'application/json'} },
+                    imageOptions: { width: 600, height: 600, headers: {'content-type':'text/html'} },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),
                         _jsx(Button, { action: "/swirl", value: "inspiration", children: "Wow" }),
