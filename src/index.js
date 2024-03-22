@@ -365,8 +365,8 @@ app.frame('/swirl', async (c) => {
                             height: '100%',
                             padding: '30px 30px',
                             textAlign: 'center',
-                            boxSizing: 'border-box',,
-                        }, children: inspiration })),
+                            boxSizing: 'border-box'}})),
+                        // }, children: inspiration })),
                     imageOptions: { width: 600, height: 600 },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),
