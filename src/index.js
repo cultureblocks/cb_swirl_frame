@@ -189,13 +189,13 @@ export const app = new Frog({
     secret: process.env.FROG_SECRET
 });
 // Middleware
-// app.use(async (c, next) => {
-//   console.log(`Middleware [${c.req.method}] ${c.req.url}`)
-//   console.log(c.res.headers);
+ app.use(async (c, next) => {
+   console.log(`Middleware [${c.req}]`)
+   console.log(c.res.headers);
 //   console.log(c.res);
 //   console.log(`Middleware 2`)
-//   await next()
-// })
+   await next()
+ })
 // Intro Swirl Frame
 const images = [
     "One.jpeg", "Two.jpeg", "Three.jpeg", "Four.jpeg", "Five.jpeg",
