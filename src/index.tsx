@@ -247,6 +247,7 @@ export const app = new Frog({
     inspiration: "",
     emulsifier: ""
   },  
+  headers: { 'content-type': 'application/json' },
   secret: process.env.FROG_SECRET
 })
 
@@ -255,14 +256,13 @@ export const app = new Frog({
 
 
 // Middleware
-
-// app.use(async (c, next) => {
-//   console.log(`Middleware [${c.req.method}] ${c.req.url}`)
-//   console.log(c.res.headers);
+app.use(async (c, next) => {
+  console.log(`Middleware [${c.req.method}]`)
+  console.log(c.res.headers);
 //   console.log(c.res);
 //   console.log(`Middleware 2`)
-//   await next()
-// })
+  await next()
+})
 
 
 

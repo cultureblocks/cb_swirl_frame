@@ -186,6 +186,7 @@ export const app = new Frog({
         inspiration: "",
         emulsifier: ""
     },
+    headers: { 'content-type': 'application/json' },
     secret: process.env.FROG_SECRET
 });
 // Middleware
