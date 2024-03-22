@@ -179,7 +179,7 @@ function renderSwirlWithUniqueColors(swirl) {
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
         creatorId: 0,
@@ -255,7 +255,7 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirlContent })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: { width: 600, height: 600, headers: {'content-type':'application/json'} },
                 intents: [
                     _jsx(Button, { action: "/swirl", children: "Swirl" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -365,9 +365,9 @@ app.frame('/swirl', async (c) => {
                             height: '100%',
                             padding: '30px 30px',
                             textAlign: 'center',
-                            boxSizing: 'border-box'}})),
-                        // }, children: inspiration })),
-                    imageOptions: { width: 600, height: 600 },
+                            boxSizing: 'border-box',
+                        }, children: inspiration })),
+                    imageOptions: { width: 600, height: 600, headers: {'content-type':'application/json'} },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),
                         _jsx(Button, { action: "/swirl", value: "inspiration", children: "Wow" }),
