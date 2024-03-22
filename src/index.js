@@ -1,6 +1,7 @@
 import { jsx as _jsx } from "hono/jsx/jsx-runtime";
 import { serve } from '@hono/node-server';
 import { Button, Frog, TextInput } from 'frog';
+import 'hono/jsx';
 import fs from 'fs';
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
@@ -179,7 +180,7 @@ function renderSwirlWithUniqueColors(swirl) {
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
-    // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+    hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
         creatorId: 0,
@@ -190,13 +191,13 @@ export const app = new Frog({
     secret: process.env.FROG_SECRET
 });
 // Middleware
- app.use(async (c, next) => {
-   console.log(`Middleware [${c.req.method}]`)
-   console.log(c.res.headers);
-//   console.log(c.res);
-//   console.log(`Middleware 2`)
-   await next()
- })
+app.use(async (c, next) => {
+    console.log(`Middleware [${c.req.method}]`);
+    console.log(c.res.headers);
+    //   console.log(c.res);
+    //   console.log(`Middleware 2`)
+    await next();
+});
 // Intro Swirl Frame
 const images = [
     "One.jpeg", "Two.jpeg", "Three.jpeg", "Four.jpeg", "Five.jpeg",
@@ -255,7 +256,7 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirlContent })),
-                imageOptions: { width: 600, height: 600, headers: {'content-type':'application/json'} },
+                imageOptions: { width: 600, height: 600 },
                 intents: [
                     _jsx(Button, { action: "/swirl", children: "Swirl" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -354,23 +355,23 @@ app.frame('/swirl', async (c) => {
                 const needsLineBreak = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`;
                 const inspiration = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
                 return c.res({
-                    image: (_jsx("div", { style: {
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'black',
-                            background: 'white',
-                            width: '100%',
-                            height: '100%',
-                            padding: '30px 30px',
-                            textAlign: 'center',
-                            boxSizing: 'border-box',
-                        }, children: inspiration })),
-                    imageOptions: { width: 600, height: 600, 
-                        headers: {
-                            'content-type':'text/html',
-                            'Cache-Control': 'max-age=0'} 
+                    image: (_jsx("div", { style: { backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }, children: _jsx("div", { style: {
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'black',
+                                background: 'white',
+                                width: '100%',
+                                height: '100%',
+                                padding: '30px 30px',
+                                textAlign: 'center',
+                                boxSizing: 'border-box',
+                            }, children: inspiration }) })),
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        headers: { 'content-type': 'text/html; charset=UTF-8' }
                     },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),

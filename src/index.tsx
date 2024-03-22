@@ -1,5 +1,6 @@
 import { serve } from '@hono/node-server';
 import { Button, Frog, TextInput } from 'frog';
+import  'hono/jsx'
 import fs from 'fs';
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
@@ -469,25 +470,31 @@ app.frame('/swirl', async (c) => {
         
         return c.res({
           image: (
-            <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'black',
-              background: 'white',
-              width: '100%',
-              height: '100%',
-              padding: '30px 30px',
-              textAlign: 'center',
-              boxSizing: 'border-box',
-            }}
-          >
-            {inspiration}
-          </div>
+            <div style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'black',
+                  background: 'white',
+                  width: '100%',
+                  height: '100%',
+                  padding: '30px 30px',
+                  textAlign: 'center',
+                  boxSizing: 'border-box',
+                }}
+              >
+                {inspiration}
+              </div>
+            </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            headers: { 'content-type': 'text/html; charset=UTF-8' }
+          },
           intents: [
             <TextInput placeholder="..." />,
             <Button action= "/swirl" value="inspiration">Wow</Button>,
