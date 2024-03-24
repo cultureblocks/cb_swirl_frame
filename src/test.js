@@ -37,8 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
-var jsx_dev_runtime_1 = require("react/jsx-dev-runtime");
-var _jsxFileName = "src/test.tsx";
 var node_server_1 = require("@hono/node-server");
 var frog_1 = require("frog");
 // import dotenv from 'dotenv';
@@ -54,7 +52,7 @@ exports.app.frame('/', function (c) { return __awaiter(void 0, void 0, void 0, f
         return [2 /*return*/, c.res({
                 image: 'https://via.placeholder.com/150',
                 intents: [
-                    (0, jsx_dev_runtime_1.jsxDEV)(frog_1.Button, { action: "/next", value: "frameTwo", children: "Next" }, void 0, false, { fileName: _jsxFileName, lineNumber: 18, columnNumber: 15 }, this),
+                    React.createElement(frog_1.Button, { action: "/next", value: "frameTwo" }, "Next"),
                 ],
             })];
     });
@@ -67,14 +65,14 @@ exports.app.frame('/next', function (c) { return __awaiter(void 0, void 0, void 
             return [2 /*return*/, c.res({
                     image: 'https://via.placeholder.com/150',
                     intents: [
-                        (0, jsx_dev_runtime_1.jsxDEV)(frog_1.Button, { action: "/next", value: "frameThree", children: "Next" }, void 0, false, { fileName: _jsxFileName, lineNumber: 30, columnNumber: 17 }, this),
+                        React.createElement(frog_1.Button, { action: "/next", value: "frameThree" }, "Next"),
                     ],
                 })];
         }
         else {
             text = "Text";
             return [2 /*return*/, c.res({
-                    image: ((0, jsx_dev_runtime_1.jsxDEV)("div", { style: {
+                    image: (React.createElement("div", { style: {
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -86,9 +84,9 @@ exports.app.frame('/next', function (c) { return __awaiter(void 0, void 0, void 
                             padding: '30px 30px',
                             textAlign: 'center',
                             boxSizing: 'border-box',
-                        }, children: text }, void 0, false, { fileName: _jsxFileName, lineNumber: 38, columnNumber: 15 }, this)),
+                        } }, text)),
                     intents: [
-                        (0, jsx_dev_runtime_1.jsxDEV)(frog_1.Button, { action: "/next", value: "done", children: "Done" }, void 0, false, { fileName: _jsxFileName, lineNumber: 57, columnNumber: 17 }, this),
+                        React.createElement(frog_1.Button, { action: "/next", value: "done" }, "Done"),
                     ],
                 })];
         }
