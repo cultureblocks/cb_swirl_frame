@@ -176,7 +176,7 @@ function renderSwirlWithUniqueColors(swirl) {
     const responsesWithExtras = fullText.split('\n').map((line, index) => (_jsx("div", { style: { color: shuffledColors[index % shuffledColors.length] }, children: line }, index)));
     return responsesWithExtras;
 }
-//// Frog //TESTING
+//// Frog
 export const app = new Frog({
     basePath: '/swirl',
     browserLocation: 'https://cultureblocks.world',
@@ -214,7 +214,6 @@ function getRandomImage() {
     return `${process.env.IMG_URL_PREFIX}${images[randomIndex]}?cb=${cacheBuster}`;
 }
 app.frame('/', async (c) => {
-    // TESTING
     const randomImageUrl = getRandomImage();
     return c.res({
         image: randomImageUrl,
@@ -423,7 +422,7 @@ app.frame('/swirl', async (c) => {
                     ],
                 });
             }
-            else if (buttonValue === "emulsifier") { // Creator can confirm X
+            else if (buttonValue === "emulsifier") { // Creator can confirm X //TESTING
                 if (buttonIndex === 1 && sanitizedText !== undefined) {
                     state.emulsifier = sanitizedText;
                 }
@@ -445,7 +444,7 @@ app.frame('/swirl', async (c) => {
                             padding: '30px 30px',
                             textAlign: 'center',
                             boxSizing: 'border-box',
-                        }, children: lookGood })),
+                        } })),
                     imageOptions: { width: 600, height: 600 },
                     intents: [
                         _jsx(Button, { action: "/swirl", value: "confirm", children: "Yes" }),

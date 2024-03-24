@@ -238,7 +238,8 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 //// Frog
 
 
-export const app = new Frog({ //TESTING
+export const app = new Frog({ 
+  //TESTING
   basePath: '/swirl',
   browserLocation: 'https://cultureblocks.world',
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
@@ -286,7 +287,8 @@ function getRandomImage(): string {
 }
 
 
-app.frame('/', async (c) => { // TESTING
+app.frame('/', async (c) => { 
+  // TESTING
   
   const randomImageUrl = getRandomImage();
   return c.res({
@@ -544,7 +546,7 @@ app.frame('/swirl', async (c) => {
             <Button action= "/swirl" value="emulsifier">No</Button>,
           ],
         })
-      } else if (buttonValue === "emulsifier"){ // Creator can confirm X
+      } else if (buttonValue === "emulsifier"){ // Creator can confirm X //TESTING
         
         if (buttonIndex === 1 && sanitizedText !== undefined) {
           state.emulsifier = sanitizedText;
@@ -575,7 +577,7 @@ app.frame('/swirl', async (c) => {
               boxSizing: 'border-box',
             }}
           >
-            {lookGood}
+            {/* {lookGood} */}
           </div>
           ),
           imageOptions: { width: 600, height: 600 },
