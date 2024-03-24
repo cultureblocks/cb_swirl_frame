@@ -178,6 +178,7 @@ function renderSwirlWithUniqueColors(swirl) {
 }
 //// Frog
 export const app = new Frog({
+    //TESTING
     basePath: '/swirl',
     browserLocation: 'https://cultureblocks.world',
     hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
@@ -214,6 +215,7 @@ function getRandomImage() {
     return `${process.env.IMG_URL_PREFIX}${images[randomIndex]}?cb=${cacheBuster}`;
 }
 app.frame('/', async (c) => {
+    // TESTING
     const randomImageUrl = getRandomImage();
     return c.res({
         image: randomImageUrl,
@@ -445,7 +447,7 @@ app.frame('/swirl', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         } })),
-                    imageOptions: { width: 600, height: 600 },
+                    imageOptions: { width: 600, height: 600, headers: { 'Content-Type': 'image/svg+xml' } },
                     intents: [
                         _jsx(Button, { action: "/swirl", value: "confirm", children: "Yes" }),
                         _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "No" }),

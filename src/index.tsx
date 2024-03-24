@@ -580,7 +580,7 @@ app.frame('/swirl', async (c) => {
             {/* {lookGood} */}
           </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { width: 600, height: 600, headers: {'Content-Type': 'image/svg+xml'}},
           intents: [
             <Button action= "/swirl" value="confirm">Yes</Button>,
             <Button action= "/swirl" value="loadSwirl">No</Button>,
