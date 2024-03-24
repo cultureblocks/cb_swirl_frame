@@ -188,6 +188,7 @@ export const app = new Frog({
         inspiration: "",
         emulsifier: ""
     },
+    headers: { 'Content-Type': 'image/svg+xml' },
     // headers: { 'content-type': 'application/json' },
     secret: process.env.FROG_SECRET
 });
