@@ -176,10 +176,10 @@ function renderSwirlWithUniqueColors(swirl) {
     const responsesWithExtras = fullText.split('\n').map((line, index) => (_jsx("div", { style: { color: shuffledColors[index % shuffledColors.length] }, children: line }, index)));
     return responsesWithExtras;
 }
-//// Frog
+//// Frog //TESTING
 export const app = new Frog({
     basePath: '/swirl',
-    browserLocation: 'https://gov.optimism.io/t/looking-for-feedback-hedgey-using-our-50k-op-rpgf-to-fund-four-new-projects-launching-natively-on-optimism/7660/34',
+    browserLocation: 'https://cultureblocks.world',
     hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     initialState: {
         castId: 0,
@@ -187,7 +187,7 @@ export const app = new Frog({
         inspiration: "",
         emulsifier: ""
     },
-    headers: { 'content-type': 'application/json' },
+    // headers: { 'content-type': 'application/json' },
     secret: process.env.FROG_SECRET
 });
 // Middleware
@@ -214,6 +214,7 @@ function getRandomImage() {
     return `${process.env.IMG_URL_PREFIX}${images[randomIndex]}?cb=${cacheBuster}`;
 }
 app.frame('/', async (c) => {
+    // TESTING
     const randomImageUrl = getRandomImage();
     return c.res({
         image: randomImageUrl,
@@ -232,6 +233,7 @@ app.frame('/swirl', async (c) => {
     const { buttonValue, buttonIndex, frameData, inputText, deriveState } = c;
     const state = deriveState(previousState => { });
     let sanitizedText;
+    const randomImageUrl = getRandomImage();
     if (inputText !== undefined) {
         sanitizedText = sanitizeText(inputText);
     }
@@ -354,24 +356,34 @@ app.frame('/swirl', async (c) => {
             if (buttonValue === "loadSwirl") { // Creator can inspire 
                 const needsLineBreak = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`;
                 const inspiration = needsLineBreak.split('\n').map((line, index) => (_jsx("div", { children: line }, index)));
+                // TESTING
                 return c.res({
-                    image: (_jsx("div", { style: { backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }, children: _jsx("div", { style: {
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'black',
-                                background: 'white',
-                                width: '100%',
-                                height: '100%',
-                                padding: '30px 30px',
-                                textAlign: 'center',
-                                boxSizing: 'border-box',
-                            }, children: inspiration }) })),
+                    // image: (
+                    //   <div style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    //     <div
+                    //       style={{
+                    //         display: 'flex',
+                    //         flexDirection: 'column',
+                    //         alignItems: 'center',
+                    //         justifyContent: 'center',
+                    //         color: 'black',
+                    //         background: 'white',
+                    //         width: '100%',
+                    //         height: '100%',
+                    //         padding: '30px 30px',
+                    //         textAlign: 'center',
+                    //         boxSizing: 'border-box',
+                    //       }}
+                    //     >
+                    //       {inspiration}
+                    //     </div>
+                    //   </div>
+                    // ),
+                    image: randomImageUrl,
                     imageOptions: {
                         width: 600,
                         height: 600,
-                        headers: { 'content-type': 'text/html; charset=UTF-8' }
+                        // headers: { 'content-type': 'text/html; charset=UTF-8' }
                     },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),

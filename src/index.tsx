@@ -238,7 +238,7 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 //// Frog
 
 
-export const app = new Frog({
+export const app = new Frog({ //TESTING
   basePath: '/swirl',
   browserLocation: 'https://cultureblocks.world',
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
@@ -248,7 +248,7 @@ export const app = new Frog({
     inspiration: "",
     emulsifier: ""
   },  
-  headers: { 'content-type': 'application/json' },
+  // headers: { 'content-type': 'application/json' },
   secret: process.env.FROG_SECRET
 })
 
@@ -286,7 +286,7 @@ function getRandomImage(): string {
 }
 
 
-app.frame('/', async (c) => {
+app.frame('/', async (c) => { // TESTING
   
   const randomImageUrl = getRandomImage();
   return c.res({
@@ -308,6 +308,8 @@ app.frame('/swirl', async (c) => {
   const { buttonValue, buttonIndex, frameData, inputText, deriveState} = c
   const state = deriveState(previousState => {})  
   let sanitizedText: string | undefined
+  const randomImageUrl = getRandomImage();
+
   if (inputText !== undefined) {
     sanitizedText = sanitizeText(inputText);
   } else {
@@ -467,33 +469,34 @@ app.frame('/swirl', async (c) => {
         const inspiration = needsLineBreak.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
-        
+        // TESTING
         return c.res({
-          image: (
-            <div style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'black',
-                  background: 'white',
-                  width: '100%',
-                  height: '100%',
-                  padding: '30px 30px',
-                  textAlign: 'center',
-                  boxSizing: 'border-box',
-                }}
-              >
-                {inspiration}
-              </div>
-            </div>
-          ),
+          // image: (
+          //   <div style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          //     <div
+          //       style={{
+          //         display: 'flex',
+          //         flexDirection: 'column',
+          //         alignItems: 'center',
+          //         justifyContent: 'center',
+          //         color: 'black',
+          //         background: 'white',
+          //         width: '100%',
+          //         height: '100%',
+          //         padding: '30px 30px',
+          //         textAlign: 'center',
+          //         boxSizing: 'border-box',
+          //       }}
+          //     >
+          //       {inspiration}
+          //     </div>
+          //   </div>
+          // ),
+          image: randomImageUrl,
           imageOptions: { 
             width: 600, 
             height: 600, 
-            headers: { 'content-type': 'text/html; charset=UTF-8' }
+            // headers: { 'content-type': 'text/html; charset=UTF-8' }
           },
           intents: [
             <TextInput placeholder="..." />,
