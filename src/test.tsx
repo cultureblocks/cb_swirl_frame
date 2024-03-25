@@ -55,7 +55,6 @@ app.frame('/next', async (c) => {
     })
   } 
   else { 
-    const text = `Text`
     return c.res({
       image: (
         <div
@@ -73,7 +72,6 @@ app.frame('/next', async (c) => {
           boxSizing: 'border-box',
         }}
       >
-        {text}
       </div>
       ),
       intents: [
