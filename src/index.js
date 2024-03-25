@@ -246,7 +246,11 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirlContent })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(Button, { action: "/swirl", children: "Swirl" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -284,7 +288,11 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirlContent })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(Button, { action: "/swirl", children: "Swirl" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -307,7 +315,11 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirlContent })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(TextInput, { placeholder: "Add some flavor..." }),
                     _jsx(Button, { action: "/swirl", value: "merge", children: "Merge" }),
@@ -330,7 +342,11 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirlContent })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(TextInput, { placeholder: "One message per person..." }),
                     _jsx(Button, { action: "/swirl", value: "merge", children: "Replace Your Message" }),
@@ -396,7 +412,11 @@ app.frame('/swirl', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: emulsifierText })),
-                    imageOptions: { width: 600, height: 600 },
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        format: 'png'
+                    },
                     intents: [
                         _jsx(TextInput, { placeholder: "..." }),
                         _jsx(Button, { action: "/swirl", value: "emulsifier", children: "Wow" }),
@@ -428,7 +448,11 @@ app.frame('/swirl', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: confirmText })),
-                    imageOptions: { width: 600, height: 600, headers: { 'Content-Type': 'image/svg+xml' } },
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        format: 'png'
+                    },
                     intents: [
                         _jsx(Button, { action: "/swirl", value: "confirm", children: "Yes" }),
                         _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "No" }),
@@ -453,7 +477,11 @@ app.frame('/swirl', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: swirlContent })),
-                    imageOptions: { width: 600, height: 600 },
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        format: 'png'
+                    },
                     intents: [
                         _jsx(TextInput, { placeholder: "Add some flavor..." }),
                         _jsx(Button, { action: "/swirl", value: "merge", children: "Merge" }),
@@ -476,7 +504,11 @@ app.frame('/swirl', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: "The Swirl has not started yet. Check back soon." })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Soon" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -506,7 +538,11 @@ app.frame('/block', async (c) => {
                                 textAlign: 'center',
                                 boxSizing: 'border-box',
                             }, children: "One rating per user." })),
-                        imageOptions: { width: 600, height: 600 },
+                        imageOptions: {
+                            width: 600,
+                            height: 600,
+                            format: 'png'
+                        },
                         intents: [
                             _jsx(Button, { action: "/block", value: "stats", children: "Stats" }),
                             _jsx(Button, { action: "/block", children: "Block" }),
@@ -528,7 +564,11 @@ app.frame('/block', async (c) => {
                                 textAlign: 'center',
                                 boxSizing: 'border-box',
                             }, children: "Rate the Block." })),
-                        imageOptions: { width: 600, height: 600 },
+                        imageOptions: {
+                            width: 600,
+                            height: 600,
+                            format: 'png'
+                        },
                         intents: [
                             _jsx(Button, { action: "/block", value: "1", children: "1" }),
                             _jsx(Button, { action: "/block", value: "2", children: "2" }),
@@ -556,7 +596,11 @@ app.frame('/block', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: statsLines })),
-                    imageOptions: { width: 600, height: 600 },
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        format: 'png'
+                    },
                     intents: [
                         _jsx(Button, { action: "/block", value: "rate", children: "Rate" }),
                         _jsx(Button, { action: "/block", children: "Block" }),
@@ -581,7 +625,11 @@ app.frame('/block', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: "Your rating has been saved." })),
-                    imageOptions: { width: 600, height: 600 },
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        format: 'png'
+                    },
                     intents: [
                         _jsx(Button, { action: "/swirl", children: "Swirl" }),
                         _jsx(Button, { action: "/block", children: "Block" }),
@@ -603,7 +651,11 @@ app.frame('/block', async (c) => {
                             textAlign: 'center',
                             boxSizing: 'border-box',
                         }, children: swirl.synthesis })),
-                    imageOptions: { width: 600, height: 600 },
+                    imageOptions: {
+                        width: 600,
+                        height: 600,
+                        format: 'png'
+                    },
                     intents: [
                         _jsx(Button, { action: "/swirl", children: "Swirl" }),
                         _jsx(Button, { action: "/block", value: "stats", children: "Stats" }),
@@ -630,7 +682,11 @@ app.frame('/block', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: swirl.synthesis })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(Button, { action: "/swirl", children: "Swirl" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -653,7 +709,11 @@ app.frame('/block', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: turnsLeft })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(Button, { action: "/block", value: "creatorSynth", children: "Yes" }),
                     _jsx(Button, { action: "/swirl", children: "No" }),
@@ -675,7 +735,11 @@ app.frame('/block', async (c) => {
                         textAlign: 'center',
                         boxSizing: 'border-box',
                     }, children: "The Swirl has not finished. Check back soon." })),
-                imageOptions: { width: 600, height: 600 },
+                imageOptions: {
+                    width: 600,
+                    height: 600,
+                    format: 'png'
+                },
                 intents: [
                     _jsx(Button, { action: "/swirl", children: "Swirl" }),
                     _jsx(Button, { action: "/block", children: "Block" }),
@@ -698,7 +762,11 @@ app.frame('/block', async (c) => {
                     textAlign: 'center',
                     boxSizing: 'border-box',
                 }, children: "The Swirl has not started yet. Check back soon." })),
-            imageOptions: { width: 600, height: 600 },
+            imageOptions: {
+                width: 600,
+                height: 600,
+                format: 'png'
+            },
             intents: [
                 _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
                 _jsx(Button, { action: "/block", children: "Block" }),

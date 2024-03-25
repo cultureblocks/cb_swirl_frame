@@ -331,7 +331,11 @@ app.frame('/swirl', async (c) => {
           {swirlContent}
         </div>
         ),
-        imageOptions: { width: 600, height: 600 },
+        imageOptions: { 
+          width: 600, 
+          height: 600, 
+          format: 'png'
+        },
         intents: [
           <Button action="/swirl">Swirl</Button>, 
           <Button action="/block">Block</Button>, 
@@ -379,7 +383,11 @@ app.frame('/swirl', async (c) => {
           {swirlContent}
         </div>
         ),
-        imageOptions: { width: 600, height: 600 },
+        imageOptions: { 
+          width: 600, 
+          height: 600, 
+          format: 'png'
+        },
         intents: [
           <Button action="/swirl">Swirl</Button>, 
           <Button action="/block">Block</Button>, 
@@ -409,7 +417,11 @@ app.frame('/swirl', async (c) => {
           {swirlContent}
         </div>
         ),
-        imageOptions: { width: 600, height: 600 },
+        imageOptions: { 
+          width: 600, 
+          height: 600, 
+          format: 'png'
+        },
         intents: [
           <TextInput placeholder="Add some flavor..." />,
           <Button action="/swirl" value="merge">Merge</Button>, 
@@ -439,7 +451,11 @@ app.frame('/swirl', async (c) => {
           {swirlContent}
         </div>
         ),
-        imageOptions: { width: 600, height: 600 },
+        imageOptions: { 
+          width: 600, 
+          height: 600, 
+          format: 'png'
+        },
         intents: [
           <TextInput placeholder="One message per person..." />,
           <Button action="/swirl" value="merge">Replace Your Message</Button>, 
@@ -526,7 +542,11 @@ app.frame('/swirl', async (c) => {
             {emulsifierText}
           </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
           intents: [
             <TextInput placeholder="..." />,
             <Button action= "/swirl" value="emulsifier">Wow</Button>,
@@ -568,7 +588,11 @@ app.frame('/swirl', async (c) => {
             { confirmText }
           </div>
           ),
-          imageOptions: { width: 600, height: 600, headers: {'Content-Type': 'image/svg+xml'}},
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
           intents: [
             <Button action= "/swirl" value="confirm">Yes</Button>,
             <Button action= "/swirl" value="loadSwirl">No</Button>,
@@ -601,7 +625,11 @@ app.frame('/swirl', async (c) => {
             {swirlContent}
           </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
           intents: [
             <TextInput placeholder="Add some flavor..." />,
             <Button action="/swirl" value="merge">Merge</Button>, 
@@ -631,7 +659,11 @@ app.frame('/swirl', async (c) => {
           The Swirl has not started yet. Check back soon.
         </div>
         ),
-        imageOptions: { width: 600, height: 600 },
+        imageOptions: { 
+          width: 600, 
+          height: 600, 
+          format: 'png'
+        },
         intents: [
           <Button action= "/swirl" value="loadSwirl">Soon</Button>,
           <Button action= "/block">Block</Button>,
@@ -675,7 +707,11 @@ app.frame('/block', async (c) => {
                   One rating per user.
               </div>
             ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
             intents: [
               <Button action="/block" value="stats">Stats</Button>, 
               <Button action="/block">Block</Button>, 
@@ -703,7 +739,11 @@ app.frame('/block', async (c) => {
               Rate the Block.
             </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
             intents: [
               <Button action="/block" value="1">1</Button>, 
               <Button action="/block" value="2">2</Button>, 
@@ -742,7 +782,11 @@ app.frame('/block', async (c) => {
               {statsLines}
             </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
           intents: [
             <Button action="/block" value="rate">Rate</Button>, 
             <Button action="/block">Block</Button>,
@@ -776,7 +820,11 @@ app.frame('/block', async (c) => {
               Your rating has been saved.
             </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
             intents: [
                 <Button action="/swirl">Swirl</Button>,
                 <Button action="/block">Block</Button>,
@@ -805,7 +853,11 @@ app.frame('/block', async (c) => {
               {swirl.synthesis}
             </div>
           ),
-          imageOptions: { width: 600, height: 600 },
+          imageOptions: { 
+            width: 600, 
+            height: 600, 
+            format: 'png'
+          },
           intents: [
             <Button action="/swirl">Swirl</Button>, 
             <Button action="/block" value="stats">Stats</Button>, 
@@ -839,7 +891,11 @@ app.frame('/block', async (c) => {
           {swirl.synthesis}
         </div>
       ),
-      imageOptions: { width: 600, height: 600 },
+      imageOptions: { 
+        width: 600, 
+        height: 600, 
+        format: 'png'
+      },
         intents: [
           <Button action="/swirl">Swirl</Button>, 
           <Button action="/block">Block</Button>, 
@@ -869,7 +925,11 @@ app.frame('/block', async (c) => {
           {turnsLeft}
         </div>
       ),
-      imageOptions: { width: 600, height: 600 },
+      imageOptions: { 
+        width: 600, 
+        height: 600, 
+        format: 'png'
+      },
         intents: [
           <Button action="/block" value="creatorSynth">Yes</Button>, 
           <Button action="/swirl">No</Button>, 
@@ -897,7 +957,11 @@ app.frame('/block', async (c) => {
           The Swirl has not finished. Check back soon.
         </div>
         ),
-        imageOptions: { width: 600, height: 600 },
+        imageOptions: { 
+          width: 600, 
+          height: 600, 
+          format: 'png'
+        },
         intents: [
           <Button action="/swirl">Swirl</Button>, 
           <Button action="/block">Block</Button>, 
@@ -926,7 +990,11 @@ app.frame('/block', async (c) => {
         The Swirl has not started yet. Check back soon.
       </div>
       ),
-      imageOptions: { width: 600, height: 600 },
+      imageOptions: { 
+        width: 600, 
+        height: 600, 
+        format: 'png'
+      },
       intents: [
         <Button action="/swirl" value="loadSwirl">Swirl</Button>, 
         <Button action="/block">Block</Button>, 
