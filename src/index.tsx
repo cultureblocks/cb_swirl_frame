@@ -242,10 +242,6 @@ export const app = new Frog({
   basePath: '/swirl',
   browserLocation: 'https://cultureblocks.world',
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
-  imageOptions: {
-    format: 'png',
-    fonts: []
-  },
   secret: process.env.FROG_SECRET
 })
 
@@ -486,6 +482,7 @@ app.frame('/swirl', async (c) => {
           imageOptions: { 
             width: 600, 
             height: 600, 
+            format: 'png'
           },
           intents: [
             <TextInput placeholder="..." />,
