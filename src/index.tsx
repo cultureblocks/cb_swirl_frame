@@ -244,6 +244,7 @@ export const app = new Frog({
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
   imageOptions: {
     format: 'png',
+    fonts: [{name: "Arial", source: 'google'}]
   },
   secret: process.env.FROG_SECRET
 })
