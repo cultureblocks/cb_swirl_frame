@@ -43,7 +43,7 @@ const emptySwirl: Swirl = {
   inspiration: "",
   emulsifier: "",
   currentTurn: 0,
-  turns: 0,
+  turns: 6,
   responses: [],
   synthesis: "",
   ratings: [],
