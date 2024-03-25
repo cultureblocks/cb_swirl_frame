@@ -1,6 +1,12 @@
 {
+  "private": true,
   "dependencies": {
+    "dotenv": "^16.4.5",
     "frames.js": "^0.9.6",
-    "frog": "^0.7.7"
+    "frog": "^0.7.7",
+    "openai": "^4.29.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17"
   }
 }

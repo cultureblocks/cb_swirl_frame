@@ -1,15 +1,37 @@
+// // ./app/frames/route.tsx
+// /* eslint-disable react/jsx-key */
+// import { createFrames, Button } from "frames.js/next";
+ 
+// const frames = createFrames();
+// const handleRequest = frames(async (ctx) => {
+//   return {
+//     image: (
+//       <span>
+//         {ctx.pressedButton
+//           ? `I clicked ${ctx.searchParams.value}`
+//           : `Click some button`}
+//       </span>
+//     ),
+//     buttons: [
+//       <Button action="post" target={{ query: { value: "Yes" }}}>
+//         Say Yes
+//       </Button>,
+//       <Button action="post" target={{ query: { value: "No" }}}>
+//         Say No
+//       </Button>,
+//     ],
+//   };
+// });
+ 
+// export const GET = handleRequest;
+// export const POST = handleRequest;
+
+
 import { serve } from '@hono/node-server';
 import { Button, Frog } from 'frog';
-// import dotenv from 'dotenv';
-// import { neynar } from 'frog/hubs'
-
-// dotenv.config();
-
-//// Frog
 
 export const app = new Frog({ 
-  basePath: '/swirl',
-  // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+  basePath: '/swirl'
 })
 
 app.frame('/', async (c) => { 
@@ -60,7 +82,6 @@ app.frame('/next', async (c) => {
     })
   }
 }) 
-
 
 
 const port = 3000
