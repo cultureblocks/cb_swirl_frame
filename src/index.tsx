@@ -239,7 +239,6 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 
 
 export const app = new Frog({ 
-  //TESTING
   basePath: '/swirl',
   browserLocation: 'https://cultureblocks.world',
   hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
@@ -254,8 +253,6 @@ export const app = new Frog({
 app.use(async (c, next) => {
   console.log(`Middleware [${c.req.method}]`)
   console.log(c.res.headers);
-//   console.log(c.res);
-//   console.log(`Middleware 2`)
   await next()
 })
 
@@ -275,14 +272,12 @@ const images: string[] = [
 
 function getRandomImage(): string {
   const randomIndex = Math.floor(Math.random() * images.length);
-  const cacheBuster = Date.now(); // Simplified cache buster based on current time in milliseconds
+  const cacheBuster = Date.now(); 
   return `${process.env.IMG_URL_PREFIX}${images[randomIndex]}?cb=${cacheBuster}`;
 }
 
 
 app.frame('/', async (c) => { 
-  // TESTING
-  
   const randomImageUrl = getRandomImage();
   return c.res({
     image: randomImageUrl, 
@@ -302,7 +297,6 @@ app.frame('/', async (c) => {
 app.frame('/swirl', async (c) => {
   const { buttonValue, buttonIndex, frameData, inputText} = c
   let sanitizedText: string | undefined
-  const randomImageUrl = getRandomImage();
 
   if (inputText !== undefined) {
     sanitizedText = sanitizeText(inputText);
@@ -459,38 +453,35 @@ app.frame('/swirl', async (c) => {
       
       if (buttonValue === "loadSwirl"){ // Creator can inspire 
 
-        const needsLineBreak = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`
-        const inspiration = needsLineBreak.split('\n').map((line, index) => (
+        const text = `Inspiration sets the theme or focal point for responses. \n\n If left blank, who knows what could happen...`
+        const inspirationText = text.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
-        // TESTING
         return c.res({
-          // image: (
-          //   <div style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          //     <div
-          //       style={{
-          //         display: 'flex',
-          //         flexDirection: 'column',
-          //         alignItems: 'center',
-          //         justifyContent: 'center',
-          //         color: 'black',
-          //         background: 'white',
-          //         width: '100%',
-          //         height: '100%',
-          //         padding: '30px 30px',
-          //         textAlign: 'center',
-          //         boxSizing: 'border-box',
-          //       }}
-          //     >
-          //       {inspiration}
-          //     </div>
-          //   </div>
-          // ),
-          image: randomImageUrl,
+          image: (
+            <div style={{ backgroundColor: 'white', width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'black',
+                  background: 'white',
+                  width: '100%',
+                  height: '100%',
+                  padding: '30px 30px',
+                  textAlign: 'center',
+                  boxSizing: 'border-box',
+                }}
+              >
+                {inspirationText}
+              </div>
+            </div>
+          ),
           imageOptions: { 
             width: 600, 
             height: 600, 
-            // headers: { 'content-type': 'text/html; charset=UTF-8' }
           },
           intents: [
             <TextInput placeholder="..." />,
@@ -498,19 +489,19 @@ app.frame('/swirl', async (c) => {
             <Button action= "/swirl" value="inspiration">No</Button>,
           ],
         })
-      } else if (buttonValue === "inspiration"){ // Creator can emulsify X
+      } else if (buttonValue === "inspiration"){ // Creator can emulsify
 
         if (buttonIndex === 1 && sanitizedText !== undefined) {
           swirl.inspiration = sanitizedText;
         } else {
-            swirl.inspiration = '';
+          swirl.inspiration = '';
         }
         swirl.castId = frameData?.castId.hash
         swirl.creatorId = frameData?.castId.fid
         saveSwirl(swirl);
       
-        const needsLineBreak = `An emulsifier gives AI directions on what to do with the comments.\n\n If left blank, who knows what could happen...`
-        const emulsifier = needsLineBreak.split('\n').map((line, index) => (
+        const text = `An emulsifier gives AI directions on what to do with the comments.\n\n If left blank, who knows what could happen...`
+        const emulsifierText = text.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
         
@@ -531,7 +522,7 @@ app.frame('/swirl', async (c) => {
               boxSizing: 'border-box',
             }}
           >
-            {emulsifier}
+            {emulsifierText}
           </div>
           ),
           imageOptions: { width: 600, height: 600 },
@@ -550,8 +541,8 @@ app.frame('/swirl', async (c) => {
         }
         saveSwirl(swirl);
 
-        const needsLineBreak = `Inspiration: ${swirl.inspiration}\nEmulsifier: ${swirl.emulsifier}\n\nDoes this look good?`;
-        const lookGood = needsLineBreak.split('\n').map((line, index) => (
+        const text = `Inspiration: ${swirl.inspiration}\nEmulsifier: ${swirl.emulsifier}\n\nDoes this look good?`;
+        const confirmText = text.split('\n').map((line, index) => (
           <div key={index}>{line}</div>
         ));
 
@@ -573,7 +564,7 @@ app.frame('/swirl', async (c) => {
               boxSizing: 'border-box',
             }}
           >
-            {/* {lookGood} */}
+            { confirmText }
           </div>
           ),
           imageOptions: { width: 600, height: 600, headers: {'Content-Type': 'image/svg+xml'}},
@@ -657,7 +648,7 @@ app.frame('/block', async (c) => {
   const swirl = findSwirlDataByCastId(frameData?.castId.hash)
   if (swirl.castId){// swirl exists
 
-    if (swirl.synthesis){//synth + mint exist. /swirl "block" swirl /block "stats" block stats /mint
+    if (swirl.synthesis){//synth + mint exist
 
       if (buttonValue === "rate"){//add a rating if haven't
 
@@ -689,7 +680,7 @@ app.frame('/block', async (c) => {
               <Button action="/block">Block</Button>, 
             ],
           })
-        } else {//accept rating /block "stats" block stats
+        } else {//accept rating 
           
           return c.res({
             image: (
@@ -758,7 +749,7 @@ app.frame('/block', async (c) => {
         });
         
         
-      } else if (buttonValue !== undefined && ["1", "2", "3", "4"].includes(buttonValue)) { // Check if buttonValue is "1", "2", "3", or "4"
+      } else if (buttonValue !== undefined && ["1", "2", "3", "4"].includes(buttonValue)) { // Save rating
         
         const rating: number = parseInt(buttonValue);
         swirl.ratings.push({ fid: frameData?.fid, rating });
