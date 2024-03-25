@@ -48,7 +48,6 @@ app.frame('/next', async (c) => {
         });
     }
     else {
-        const text = `Text`;
         return c.res({
             image: (_jsx("div", { style: {
                     display: 'flex',
@@ -62,7 +61,7 @@ app.frame('/next', async (c) => {
                     padding: '30px 30px',
                     textAlign: 'center',
                     boxSizing: 'border-box',
-                }, children: text })),
+                } })),
             intents: [
                 _jsx(Button, { action: "/next", value: "done", children: "Done" }),
             ],
