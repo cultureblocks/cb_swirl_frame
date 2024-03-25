@@ -179,7 +179,7 @@ function renderSwirlWithUniqueColors(swirl) {
 //// Frog
 export const app = new Frog({
     basePath: '/swirl',
-    browserLocation: 'https://cultureblocks.world',
+    browserLocation: 'https://gov.optimism.io/t/hedgey-rpgf-grants-final-project-updates/7841/6?u=maenswirony',
     hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     secret: process.env.FROG_SECRET
 });
