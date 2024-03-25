@@ -182,7 +182,8 @@ export const app = new Frog({
     browserLocation: 'https://cultureblocks.world',
     hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
     imageOptions: {
-        format: 'png'
+        format: 'png',
+        fonts: []
     },
     secret: process.env.FROG_SECRET
 });
