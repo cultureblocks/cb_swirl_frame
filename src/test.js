@@ -27,7 +27,11 @@ import { jsx as _jsx } from "hono/jsx/jsx-runtime";
 import { serve } from '@hono/node-server';
 import { Button, Frog } from 'frog';
 export const app = new Frog({
-    basePath: '/swirl'
+    basePath: '/swirl',
+    imageOptions: {
+        format: 'png',
+        fonts: []
+    }
 });
 app.frame('/', async (c) => {
     return c.res({
