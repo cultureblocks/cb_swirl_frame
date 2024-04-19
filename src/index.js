@@ -218,7 +218,7 @@ app.frame('/', async (c) => {
         imageOptions: {
             headers: {
                 'Cache-Control': 'max-age=0',
-                'Content-Type': 'image/jpeg'
+                'ContentType': 'image/jpeg'
             }
         },
         intents: [

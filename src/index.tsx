@@ -292,7 +292,7 @@ app.frame('/', async (c) => { //TODO if block exists, show block. Add cast id to
     imageOptions: {
       headers: {
         'Cache-Control': 'max-age=0',
-        'Content-Type': 'image/jpeg'
+        'ContentType': 'image/jpeg'
       }
     },
     intents: [
