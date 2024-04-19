@@ -1,10 +1,15 @@
 {
   "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "frog dev"
+  },
   "dependencies": {
+    "@neynar/nodejs-sdk": "^1.19.3",
     "dotenv": "^16.4.5",
     "frames.js": "^0.9.6",
-    "frog": "^0.7.7",
+    "frog": "^0.7.16",
+    "hono": "^4.2.3",
     "openai": "^4.29.2"
   },
   "devDependencies": {
