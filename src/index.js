@@ -1,7 +1,8 @@
 import { jsx as _jsx } from "hono/jsx/jsx-runtime";
+import { serve } from '@hono/node-server';
 import { Button, Frog, TextInput } from 'frog';
-import { devtools } from 'frog/dev';
-import { serveStatic } from 'frog/serve-static';
+// import { devtools } from 'frog/dev'
+// import { serveStatic } from 'frog/serve-static'
 import 'hono/jsx';
 import fs from 'fs';
 import { OpenAI } from 'openai';
@@ -807,4 +808,10 @@ app.frame('/block', async (c) => {
         });
     }
 });
-devtools(app, { serveStatic });
+// devtools(app, { serveStatic })
+const port = 3000;
+console.log(`Server is running on port ${port}`);
+serve({
+    fetch: app.fetch,
+    port,
+});
