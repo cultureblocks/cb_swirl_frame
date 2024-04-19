@@ -291,9 +291,9 @@ app.frame('/', async (c) => { //TODO if block exists, show block. Add cast id to
     image: randomImageUrl, 
     imageOptions: {
       headers: {
-        'Cache-Control': 'max-age=0'
-      },
-      format: 'png'
+        'Cache-Control': 'max-age=0',
+        'Content-Type': 'image/jpeg'
+      }
     },
     intents: [
       <Button action="/swirl" value="loadSwirl">Swirl</Button>,

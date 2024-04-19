@@ -217,9 +217,9 @@ app.frame('/', async (c) => {
         image: randomImageUrl,
         imageOptions: {
             headers: {
-                'Cache-Control': 'max-age=0'
-            },
-            format: 'png'
+                'Cache-Control': 'max-age=0',
+                'Content-Type': 'image/jpeg'
+            }
         },
         intents: [
             _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),
