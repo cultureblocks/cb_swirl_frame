@@ -8,7 +8,7 @@ import fs from 'fs';
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
 import { neynar } from 'frog/hubs';
-import publishCast from './bot';
+import publishCast from './bot.js';
 dotenv.config();
 // Create an instance of the OpenAI client
 const openai = new OpenAI.OpenAI({
@@ -218,7 +218,8 @@ app.frame('/', async (c) => {
         imageOptions: {
             headers: {
                 'Cache-Control': 'max-age=0'
-            }
+            },
+            format: 'png'
         },
         intents: [
             _jsx(Button, { action: "/swirl", value: "loadSwirl", children: "Swirl" }),

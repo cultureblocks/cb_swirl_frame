@@ -8,7 +8,7 @@ import { OpenAI } from 'openai';
 import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/index.mjs';
 import dotenv from 'dotenv';
 import { neynar } from 'frog/hubs'
-import publishCast from './bot'
+import publishCast from './bot.js'
 
 dotenv.config();
 
@@ -292,7 +292,8 @@ app.frame('/', async (c) => { //TODO if block exists, show block. Add cast id to
     imageOptions: {
       headers: {
         'Cache-Control': 'max-age=0'
-      }
+      },
+      format: 'png'
     },
     intents: [
       <Button action="/swirl" value="loadSwirl">Swirl</Button>,
