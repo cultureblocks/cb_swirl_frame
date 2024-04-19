@@ -247,9 +247,9 @@ function renderSwirlWithUniqueColors(swirl: Swirl) {
 
 
 export const app = new Frog({ 
-  basePath: '/cb',
+  basePath: '/swirl',
   browserLocation: 'https://cultureblocks.space',
-  // hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
+  hub: neynar({ apiKey: process.env.NEYNAR_API_KEY ?? 'default_api_key' }),
   secret: process.env.FROG_SECRET
 })
 
@@ -620,7 +620,7 @@ app.frame('/swirl', async (c) => {
         console.log("save new swirl, serve, accept message")
         
         swirl.currentTurn +=1
-        const castHash = await publishCast("https://cultureblocks.space/cb") //TODO add cast id to link, avoid duplicates in /cb
+        const castHash = await publishCast("https://cultureblocks.space/swirl") //TODO add cast id to link, avoid duplicates in /cb
         console.log("Cast Hash is", castHash)
         swirl.cbCastId = castHash
         saveSwirl(swirl)
