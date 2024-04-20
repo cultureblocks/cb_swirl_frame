@@ -1,5 +1,5 @@
 // Bot needs to cast a frame to the cb channel, nothing else...
-import { NeynarAPIClient, isApiErrorResponse } from "@neynar/nodejs-sdk";
+import { NeynarAPIClient, isApiErrorResponse, CastParamType } from "@neynar/nodejs-sdk";
 import dotenv from 'dotenv';
 dotenv.config();
 const signerUuid = process.env.SIGNER_UUID;
@@ -10,8 +10,37 @@ if (!signerUuid) {
 if (!neynarClient) {
     throw new Error("NEYNAR_API_KEY is not defined");
 }
-const options = { channelId: "culture-blocks" };
-const publishCast = async (msg) => {
+const checkCbChannel = async (castHash) => {
+    try {
+        const castData = await neynarClient.lookUpCastByHashOrWarpcastUrl(castHash, CastParamType.Hash);
+        console.log("cast data is:", castData);
+        if (castData.cast.parent_url === "https://warpcast.com/~/channel/culture-blocks") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    catch (err) {
+        // Error handling, checking if it's an API response error.
+        if (isApiErrorResponse(err)) {
+            console.log(err.response.data);
+        }
+        else {
+            console.log(err);
+        }
+        return false;
+    }
+};
+const options = {
+    embeds: [
+        {
+            url: "https://cultureblocks.space/swirl"
+        }
+    ],
+    channelId: "culture-blocks"
+};
+const cbCast = async (msg) => {
     try {
         // Using the neynarClient to publish the cast.
         const response = await neynarClient.publishCast(signerUuid, msg, options);
@@ -29,4 +58,4 @@ const publishCast = async (msg) => {
         return undefined;
     }
 };
-export default publishCast;
+export { checkCbChannel, cbCast };
