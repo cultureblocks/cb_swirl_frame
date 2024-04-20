@@ -8,7 +8,7 @@ import fs from 'fs';
 import { OpenAI } from 'openai';
 import dotenv from 'dotenv';
 import { neynar } from 'frog/hubs';
-import publishCast from './bot.js';
+import { cbCast, checkCbChannel } from './bot.js';
 dotenv.config();
 // Create an instance of the OpenAI client
 const openai = new OpenAI.OpenAI({
@@ -480,10 +480,16 @@ app.frame('/swirl', async (c) => {
             else { // Save new swirl, serve, accept message -> "merge" 
                 console.log("save new swirl, serve, accept message");
                 swirl.currentTurn += 1;
-                const castHash = await publishCast("https://cultureblocks.space/swirl"); //TODO add cast id to link, avoid duplicates in /cb
-                console.log("Cast Hash is", castHash);
-                swirl.cbCastId = castHash;
-                saveSwirl(swirl);
+                if (await checkCbChannel(swirl.castId)) {
+                    swirl.cbCastId = swirl.castId;
+                    saveSwirl(swirl);
+                }
+                else {
+                    const castHash = await cbCast(`Inspiration: ${swirl.inspiration}` ?? `Emulsifier: ${swirl.emulsifier}` ?? "This is a wild swirl"); //TODO add cast id to link, avoid duplicates in /cb
+                    console.log("Cast Hash is", castHash);
+                    swirl.cbCastId = castHash;
+                    saveSwirl(swirl);
+                }
                 const swirlContent = renderSwirlWithUniqueColors(swirl);
                 return c.res({
                     image: (_jsx("div", { style: {
